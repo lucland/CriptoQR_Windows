@@ -1,0 +1,163 @@
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\criptoqrcode.exe.config
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\criptoqrcode.exe
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\criptoqrcode.pdb
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\AdvancedDataGridView.dll
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\AForge.dll
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\AForge.Video.DirectShow.dll
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\AForge.Video.dll
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\ClosedXML.dll
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\DocumentFormat.OpenXml.dll
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\ExcelNumberFormat.dll
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\SimpleWifi.dll
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\Spire.Barcode.dll
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\System.IO.Packaging.dll
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\UseOffice.dll
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\zxing.dll
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\zxing.presentation.dll
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\AForge.xml
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\AForge.Video.xml
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\AForge.Video.DirectShow.xml
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\ClosedXML.pdb
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\ClosedXML.xml
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\DocumentFormat.OpenXml.xml
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\ExcelNumberFormat.xml
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\SimpleWifi.xml
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\Spire.Barcode.xml
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\UseOffice.xml
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\zxing.xml
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\bin\Debug\zxing.presentation.xml
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\obj\Debug\criptoqrcode.Form1.resources
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\obj\Debug\criptoqrcode.password.resources
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\obj\Debug\criptoqrcode.Properties.Resources.resources
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\obj\Debug\criptoqrcode_multi.csproj.GenerateResource.cache
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\obj\Debug\criptoqrcode_multi.csproj.CoreCompileInputs.cache
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\obj\Debug\criptoqrcode_multi.csproj.CopyComplete
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\obj\Debug\criptoqrcode.exe
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode\criptoqrcode\obj\Debug\criptoqrcode.pdb
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\criptoqrcode.exe.config
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\criptoqrcode.exe
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\criptoqrcode.pdb
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\AdvancedDataGridView.dll
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\AForge.dll
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\AForge.Video.DirectShow.dll
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\AForge.Video.dll
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\ClosedXML.dll
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\DocumentFormat.OpenXml.dll
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\ExcelNumberFormat.dll
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\SimpleWifi.dll
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\Spire.Barcode.dll
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\System.IO.Packaging.dll
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\UseOffice.dll
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\zxing.dll
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\zxing.presentation.dll
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\AForge.xml
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\AForge.Video.xml
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\AForge.Video.DirectShow.xml
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\ClosedXML.pdb
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\ClosedXML.xml
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\DocumentFormat.OpenXml.xml
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\ExcelNumberFormat.xml
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\SimpleWifi.xml
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\Spire.Barcode.xml
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\UseOffice.xml
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\zxing.xml
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\zxing.presentation.xml
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\obj\Debug\criptoqrcode_multi.csprojAssemblyReference.cache
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\obj\Debug\criptoqrcode.Form1.resources
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\obj\Debug\criptoqrcode.password.resources
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\obj\Debug\criptoqrcode.Properties.Resources.resources
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\obj\Debug\criptoqrcode_multi.csproj.GenerateResource.cache
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\obj\Debug\criptoqrcode_multi.csproj.CoreCompileInputs.cache
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\obj\Debug\criptoqrcode_multi.csproj.CopyComplete
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\obj\Debug\criptoqrcode.exe
+C:\Users\crist\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\obj\Debug\criptoqrcode.pdb
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\criptoqrcode.exe.config
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\criptoqrcode.exe
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\criptoqrcode.pdb
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\AdvancedDataGridView.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\AForge.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\AForge.Video.DirectShow.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\AForge.Video.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\ClosedXML.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\DocumentFormat.OpenXml.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\ExcelNumberFormat.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\M2Mqtt.Net.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\SimpleWifi.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\Spire.Barcode.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\System.IO.Packaging.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\UseOffice.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\zxing.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\zxing.presentation.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\AForge.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\AForge.Video.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\AForge.Video.DirectShow.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\ClosedXML.pdb
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\ClosedXML.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\DocumentFormat.OpenXml.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\ExcelNumberFormat.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\M2Mqtt.Net.pdb
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\SimpleWifi.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\Spire.Barcode.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\UseOffice.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\zxing.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\zxing.presentation.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\obj\Debug\criptoqrcode_multi.csproj.AssemblyReference.cache
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\obj\Debug\criptoqrcode.Form1.resources
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\obj\Debug\criptoqrcode.password.resources
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\obj\Debug\criptoqrcode.Properties.Resources.resources
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\obj\Debug\criptoqrcode_multi.csproj.GenerateResource.cache
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\obj\Debug\criptoqrcode_multi.csproj.CoreCompileInputs.cache
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\obj\Debug\criptoqrcode_multi.csproj.CopyComplete
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\obj\Debug\criptoqrcode.exe
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\obj\Debug\criptoqrcode.pdb
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\obj\Debug\criptoqrcode_multi.csproj.SuggestedBindingRedirects.cache
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\obj\Debug\criptoqrcode.exe.config
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\BouncyCastle.Cryptography.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\Enums.NET.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\ICSharpCode.SharpZipLib.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\MathNet.Numerics.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\Microsoft.IO.RecyclableMemoryStream.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\NPOI.Core.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\NPOI.OOXML.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\NPOI.OpenXml4Net.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\NPOI.OpenXmlFormats.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\SixLabors.Fonts.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\SixLabors.ImageSharp.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\System.Buffers.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\System.Configuration.ConfigurationManager.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\System.Memory.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\System.Security.AccessControl.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\System.Security.Cryptography.Xml.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\System.Security.Permissions.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\System.Security.Principal.Windows.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\System.Text.Encoding.CodePages.dll
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\BouncyCastle.Cryptography.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\Enums.NET.pdb
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\Enums.NET.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\ICSharpCode.SharpZipLib.pdb
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\ICSharpCode.SharpZipLib.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\MathNet.Numerics.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\Microsoft.IO.RecyclableMemoryStream.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\NPOI.Core.pdb
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\NPOI.Core.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\NPOI.OOXML.pdb
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\NPOI.OOXML.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\NPOI.OpenXml4Net.pdb
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\NPOI.OpenXml4Net.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\NPOI.OpenXmlFormats.pdb
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\NPOI.OpenXmlFormats.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\NPOI.OpenXmlFormats.dll.config
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\SixLabors.Fonts.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\SixLabors.ImageSharp.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\System.Buffers.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\System.Configuration.ConfigurationManager.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\System.Memory.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\System.Security.AccessControl.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\System.Security.Cryptography.Xml.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\System.Security.Permissions.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\System.Security.Principal.Windows.xml
+C:\Users\Cristiano Eng\OneDrive\Porjetos DOF\Cripto_qr_mult\criptoqrcode_multi\criptoqrcode\bin\Debug\System.Text.Encoding.CodePages.xml
