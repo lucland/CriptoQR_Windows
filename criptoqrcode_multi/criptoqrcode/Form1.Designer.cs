@@ -33,6 +33,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.button50 = new System.Windows.Forms.Button();
             this.button48 = new System.Windows.Forms.Button();
             this.label64 = new System.Windows.Forms.Label();
             this.label63 = new System.Windows.Forms.Label();
@@ -67,6 +68,8 @@
             this.button42 = new System.Windows.Forms.Button();
             this.textBox10 = new System.Windows.Forms.TextBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.label68 = new System.Windows.Forms.Label();
+            this.richTextBox18 = new System.Windows.Forms.RichTextBox();
             this.button49 = new System.Windows.Forms.Button();
             this.textBox22 = new System.Windows.Forms.TextBox();
             this.panel18 = new System.Windows.Forms.Panel();
@@ -242,13 +245,13 @@
             this.label32 = new System.Windows.Forms.Label();
             this.lb4 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.pictureBox8 = new System.Windows.Forms.PictureBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label31 = new System.Windows.Forms.Label();
             this.label30 = new System.Windows.Forms.Label();
             this.label28 = new System.Windows.Forms.Label();
             this.panel10 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBox8 = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
@@ -302,6 +305,8 @@
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.timer12 = new System.Windows.Forms.Timer(this.components);
             this.bindingSource2 = new System.Windows.Forms.BindingSource(this.components);
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.timer13 = new System.Windows.Forms.Timer(this.components);
             timer7 = new System.Windows.Forms.Timer(this.components);
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
@@ -321,8 +326,8 @@
             this.panel17.SuspendLayout();
             this.panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).BeginInit();
             this.panel11.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
             this.panel6.SuspendLayout();
@@ -347,6 +352,7 @@
             this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel3.BackColor = System.Drawing.Color.Teal;
+            this.panel3.Controls.Add(this.button50);
             this.panel3.Controls.Add(this.button48);
             this.panel3.Controls.Add(this.label64);
             this.panel3.Controls.Add(this.label63);
@@ -379,6 +385,16 @@
             this.panel3.TabIndex = 1;
             this.panel3.Paint += new System.Windows.Forms.PaintEventHandler(this.panel3_Paint);
             // 
+            // button50
+            // 
+            this.button50.Location = new System.Drawing.Point(1242, 17);
+            this.button50.Name = "button50";
+            this.button50.Size = new System.Drawing.Size(75, 23);
+            this.button50.TabIndex = 118;
+            this.button50.Text = "button50";
+            this.button50.UseVisualStyleBackColor = true;
+            this.button50.Click += new System.EventHandler(this.button50_Click_1);
+            // 
             // button48
             // 
             this.button48.Location = new System.Drawing.Point(1155, 38);
@@ -387,6 +403,7 @@
             this.button48.TabIndex = 117;
             this.button48.Text = "button48";
             this.button48.UseVisualStyleBackColor = true;
+            this.button48.Visible = false;
             this.button48.Click += new System.EventHandler(this.button48_Click_1);
             // 
             // label64
@@ -551,6 +568,8 @@
             this.label18.Size = new System.Drawing.Size(41, 13);
             this.label18.TabIndex = 2;
             this.label18.Text = "label18";
+            this.label18.Visible = false;
+            this.label18.Click += new System.EventHandler(this.label18_Click);
             // 
             // label17
             // 
@@ -760,6 +779,8 @@
             this.panel2.AutoScroll = true;
             this.panel2.AutoSize = true;
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.panel2.Controls.Add(this.label68);
+            this.panel2.Controls.Add(this.richTextBox18);
             this.panel2.Controls.Add(this.button49);
             this.panel2.Controls.Add(this.textBox22);
             this.panel2.Controls.Add(this.panel18);
@@ -780,6 +801,33 @@
             this.panel2.Size = new System.Drawing.Size(227, 996);
             this.panel2.TabIndex = 1;
             // 
+            // label68
+            // 
+            this.label68.AutoSize = true;
+            this.label68.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label68.ForeColor = System.Drawing.Color.White;
+            this.label68.Location = new System.Drawing.Point(51, 872);
+            this.label68.Name = "label68";
+            this.label68.Size = new System.Drawing.Size(23, 18);
+            this.label68.TabIndex = 139;
+            this.label68.Text = "---";
+            this.label68.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // richTextBox18
+            // 
+            this.richTextBox18.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.richTextBox18.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.richTextBox18.ForeColor = System.Drawing.Color.White;
+            this.richTextBox18.Location = new System.Drawing.Point(15, 598);
+            this.richTextBox18.MaxLength = 55;
+            this.richTextBox18.Multiline = false;
+            this.richTextBox18.Name = "richTextBox18";
+            this.richTextBox18.Size = new System.Drawing.Size(61, 33);
+            this.richTextBox18.TabIndex = 135;
+            this.richTextBox18.Text = "";
+            this.richTextBox18.TextChanged += new System.EventHandler(this.richTextBox18_TextChanged);
+            this.richTextBox18.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.richTextBox18_MouseDoubleClick);
+            // 
             // button49
             // 
             this.button49.FlatAppearance.BorderSize = 0;
@@ -788,11 +836,11 @@
             this.button49.ForeColor = System.Drawing.Color.Gainsboro;
             this.button49.Image = ((System.Drawing.Image)(resources.GetObject("button49.Image")));
             this.button49.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button49.Location = new System.Drawing.Point(4, 549);
+            this.button49.Location = new System.Drawing.Point(80, 580);
             this.button49.Name = "button49";
-            this.button49.Size = new System.Drawing.Size(206, 60);
+            this.button49.Size = new System.Drawing.Size(109, 60);
             this.button49.TabIndex = 131;
-            this.button49.Text = "Print Invited";
+            this.button49.Text = "Print new";
             this.button49.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.button49.UseVisualStyleBackColor = true;
             this.button49.Click += new System.EventHandler(this.button49_Click_1);
@@ -840,7 +888,7 @@
             this.label42.Name = "label42";
             this.label42.Size = new System.Drawing.Size(80, 18);
             this.label42.TabIndex = 127;
-            this.label42.Text = "ver 170823";
+            this.label42.Text = "ver 220923";
             this.label42.Click += new System.EventHandler(this.label42_Click);
             // 
             // button6
@@ -852,7 +900,7 @@
             this.button6.ForeColor = System.Drawing.Color.Gainsboro;
             this.button6.Image = global::criptoqrcode.Properties.Resources.wifi2_level0_1;
             this.button6.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button6.Location = new System.Drawing.Point(7, 370);
+            this.button6.Location = new System.Drawing.Point(4, 427);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(207, 60);
             this.button6.TabIndex = 81;
@@ -997,7 +1045,7 @@
             this.button19.ForeColor = System.Drawing.Color.Gainsboro;
             this.button19.Image = ((System.Drawing.Image)(resources.GetObject("button19.Image")));
             this.button19.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button19.Location = new System.Drawing.Point(3, 433);
+            this.button19.Location = new System.Drawing.Point(1, 303);
             this.button19.Name = "button19";
             this.button19.Size = new System.Drawing.Size(220, 60);
             this.button19.TabIndex = 7;
@@ -1054,7 +1102,7 @@
             this.button4.ForeColor = System.Drawing.Color.Gainsboro;
             this.button4.Image = ((System.Drawing.Image)(resources.GetObject("button4.Image")));
             this.button4.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button4.Location = new System.Drawing.Point(4, 309);
+            this.button4.Location = new System.Drawing.Point(4, 361);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(220, 60);
             this.button4.TabIndex = 3;
@@ -1758,6 +1806,7 @@
             this.label27.Size = new System.Drawing.Size(25, 28);
             this.label27.TabIndex = 100;
             this.label27.Text = "0";
+            this.label27.Click += new System.EventHandler(this.label27_Click);
             // 
             // panel5
             // 
@@ -2659,9 +2708,10 @@
             this.lbustter.ForeColor = System.Drawing.Color.White;
             this.lbustter.Location = new System.Drawing.Point(-1, 392);
             this.lbustter.Name = "lbustter";
-            this.lbustter.Size = new System.Drawing.Size(124, 20);
+            this.lbustter.Size = new System.Drawing.Size(55, 20);
             this.lbustter.TabIndex = 0;
-            this.lbustter.Text = "Booster vaccine";
+            this.lbustter.Text = "NR-35";
+            this.lbustter.Click += new System.EventHandler(this.lbustter_Click);
             // 
             // richTextBox13
             // 
@@ -2684,9 +2734,9 @@
             this.lv2.ForeColor = System.Drawing.Color.White;
             this.lv2.Location = new System.Drawing.Point(-1, 359);
             this.lv2.Name = "lv2";
-            this.lv2.Size = new System.Drawing.Size(80, 20);
+            this.lv2.Size = new System.Drawing.Size(55, 20);
             this.lv2.TabIndex = 0;
-            this.lv2.Text = "Vaccine-2";
+            this.lv2.Text = "NR-33";
             // 
             // richTextBox12
             // 
@@ -2701,6 +2751,7 @@
             this.richTextBox12.Size = new System.Drawing.Size(349, 27);
             this.richTextBox12.TabIndex = 39;
             this.richTextBox12.Text = "00000000";
+            this.richTextBox12.TextChanged += new System.EventHandler(this.richTextBox12_TextChanged);
             // 
             // lv1
             // 
@@ -2709,9 +2760,10 @@
             this.lv1.ForeColor = System.Drawing.Color.White;
             this.lv1.Location = new System.Drawing.Point(-1, 325);
             this.lv1.Name = "lv1";
-            this.lv1.Size = new System.Drawing.Size(80, 20);
+            this.lv1.Size = new System.Drawing.Size(55, 20);
             this.lv1.TabIndex = 0;
-            this.lv1.Text = "Vaccine-1";
+            this.lv1.Text = "NR-10";
+            this.lv1.Click += new System.EventHandler(this.lv1_Click);
             // 
             // richTextBox11
             // 
@@ -2976,13 +3028,13 @@
             this.panel4.Controls.Add(this.label32);
             this.panel4.Controls.Add(this.lb4);
             this.panel4.Controls.Add(this.label4);
-            this.panel4.Controls.Add(this.pictureBox8);
             this.panel4.Controls.Add(this.label5);
             this.panel4.Controls.Add(this.label31);
             this.panel4.Controls.Add(this.label30);
             this.panel4.Controls.Add(this.label28);
             this.panel4.Controls.Add(this.panel10);
             this.panel4.Controls.Add(this.pictureBox1);
+            this.panel4.Controls.Add(this.pictureBox8);
             this.panel4.Location = new System.Drawing.Point(472, 224);
             this.panel4.MaximumSize = new System.Drawing.Size(400, 400);
             this.panel4.Name = "panel4";
@@ -3047,16 +3099,6 @@
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.label4.Visible = false;
             // 
-            // pictureBox8
-            // 
-            this.pictureBox8.Image = global::criptoqrcode.Properties.Resources.circulo1;
-            this.pictureBox8.Location = new System.Drawing.Point(196, 133);
-            this.pictureBox8.Name = "pictureBox8";
-            this.pictureBox8.Size = new System.Drawing.Size(98, 92);
-            this.pictureBox8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox8.TabIndex = 6;
-            this.pictureBox8.TabStop = false;
-            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -3120,6 +3162,16 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
+            // pictureBox8
+            // 
+            this.pictureBox8.Image = global::criptoqrcode.Properties.Resources.circulo1;
+            this.pictureBox8.Location = new System.Drawing.Point(199, 126);
+            this.pictureBox8.Name = "pictureBox8";
+            this.pictureBox8.Size = new System.Drawing.Size(98, 92);
+            this.pictureBox8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox8.TabIndex = 6;
+            this.pictureBox8.TabStop = false;
+            // 
             // timer1
             // 
             this.timer1.Interval = 1000;
@@ -3160,7 +3212,7 @@
             // timer9
             // 
             this.timer9.Enabled = true;
-            this.timer9.Interval = 5000;
+            this.timer9.Interval = 15000;
             this.timer9.Tick += new System.EventHandler(this.timer9_Tick);
             // 
             // panel11
@@ -3330,7 +3382,7 @@
             this.listBox1.ForeColor = System.Drawing.Color.White;
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 21;
-            this.listBox1.Location = new System.Drawing.Point(5, 66);
+            this.listBox1.Location = new System.Drawing.Point(0, 70);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(380, 84);
             this.listBox1.TabIndex = 59;
@@ -3421,11 +3473,12 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.dataGridView1.RowHeadersWidth = 51;
-            this.dataGridView1.Size = new System.Drawing.Size(113, 106);
+            this.dataGridView1.Size = new System.Drawing.Size(100, 106);
             this.dataGridView1.SortStringChangedInvokeBeforeDatasourceUpdate = true;
             this.dataGridView1.TabIndex = 124;
             this.dataGridView1.Visible = false;
             this.dataGridView1.SortStringChanged += new System.EventHandler<Zuby.ADGV.AdvancedDataGridView.SortEventArgs>(this.dataGridView1_SortStringChanged);
+            this.dataGridView1.FilterStringChanged += new System.EventHandler<Zuby.ADGV.AdvancedDataGridView.FilterEventArgs>(this.dataGridView1_FilterStringChanged);
             // 
             // label40
             // 
@@ -3728,6 +3781,11 @@
             // 
             this.bindingSource2.CurrentChanged += new System.EventHandler(this.bindingSource2_CurrentChanged);
             // 
+            // timer13
+            // 
+            this.timer13.Enabled = true;
+            this.timer13.Tick += new System.EventHandler(this.timer13_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3821,8 +3879,8 @@
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).EndInit();
             this.panel11.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
             this.panel6.ResumeLayout(false);
@@ -4029,7 +4087,6 @@
         internal System.Windows.Forms.PictureBox pictureBox8;
         private System.Windows.Forms.Panel panel10;
         private System.Windows.Forms.Label label39;
-        private Zuby.ADGV.AdvancedDataGridView dataGridView1;
         private System.Windows.Forms.TextBox lb4;
         private System.Windows.Forms.Label label40;
         private System.Windows.Forms.Panel panel9;
@@ -4114,6 +4171,12 @@
         private System.Windows.Forms.BindingSource bindingSource2;
         private System.Windows.Forms.Label label67;
         private System.Windows.Forms.Button button49;
+        private System.Windows.Forms.Button button50;
+        private Zuby.ADGV.AdvancedDataGridView dataGridView1;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.RichTextBox richTextBox18;
+        private System.Windows.Forms.Label label68;
+        private System.Windows.Forms.Timer timer13;
     }
 }
 

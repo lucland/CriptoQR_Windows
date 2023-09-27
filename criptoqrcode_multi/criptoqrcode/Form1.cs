@@ -58,6 +58,16 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using Color = System.Drawing.Color;
 using DocumentFormat.OpenXml.Drawing;
 using Path = System.IO.Path;
+using LiteDB;
+using NPOI.SS.Formula.Functions;
+using System.Security.Cryptography;
+using criptoqrcode;
+using DocumentFormat.OpenXml.ExtendedProperties;
+using DocumentFormat.OpenXml.Office2010.Word;
+using System.Net.NetworkInformation;
+using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Vml;
+using System.Collections.Concurrent;
 
 namespace criptoqrcode
 {
@@ -65,7 +75,7 @@ namespace criptoqrcode
     {
 
         delegate void SetTextCallback(string text);
-
+        private QRCodeEncryptor QRCodeEncryptor;
         MqttClient client;
         string clientId;
         string vintequatro;
@@ -74,10 +84,8 @@ namespace criptoqrcode
         string vinteum;
         public Form1()
         {
-
             InitializeComponent();
-
-
+            PopularCadastro.ParseAndInsertToLiteDB(@"C:\compartilhamento\data_txt\data2.txt");
 
         }
         //internal static password Password = new password();
@@ -157,6 +165,7 @@ namespace criptoqrcode
         string _cad;
         string _read;
         string nb;
+        Boolean checa_host_ = false;
 
         string passall;
         bool libera = false;
@@ -164,6 +173,7 @@ namespace criptoqrcode
         Boolean online_ = false;
         // Print QRcode Create Show DataBase Save Backup Settings Wi-Fi connection Send Qr Code  by E-mail
         //Show Check-in
+        int NUM = 0;
         string hostName = System.Net.Dns.GetHostName();
         string _ipstart;
         string _ipstop;
@@ -179,7 +189,7 @@ namespace criptoqrcode
         string qr_generate = "";
         string data2 = "NOME: CRISTIANO";
         string number = "Number";
-        String nome = "NOME:";
+        string nome = "NOME:";
         string emp = "COMPANY:";
         string function = "FUNCTION:";
         string id = "ID:";
@@ -203,18 +213,18 @@ namespace criptoqrcode
         int checado = 0;
         int checado2 = 0;
         int zzz = 0;
-        int comp =0;
+        int comp = 0;
         int compr = 0;
         int lista2 = 0;
         int lista3_;
-        String st;
+        string st;
         int loc = 0;
         int lav = 0;
         bool rec = false;
         int ping_local = 0;
         int count = 2; //Count the number of successful pings
         bool grava_number = false;
-        Boolean pega=false;
+        Boolean pega = false;
         String varPalavra = "teste";
         string path = @"C:\compartilhamento\data_base\2022_02_19.xls";
         int Linhas = 0;
@@ -224,6 +234,7 @@ namespace criptoqrcode
         int okay = 0;
         int cri = 0;
         int aso_1 = 0;
+        string rede = "";
         int id_1 = 0;
         bool online = false;
         string text1 = "";
@@ -266,6 +277,10 @@ namespace criptoqrcode
         bool cad_change = false;
         bool alter = false;
         bool cad = false;
+        bool print_ = false;
+        bool lido = false;
+        bool hasDb = false;
+        private bool isSynchronizing = false;
         FilterInfoCollection filterInfoCollection;
         VideoCaptureDevice videoCaptureDevice;
         Bitmap bmp;
@@ -274,6 +289,8 @@ namespace criptoqrcode
         DateTime flogo3 = DateTime.Now;
 
         int tr = 0;
+
+
 
         public static string GetWIFISignalStrength()
         {
@@ -365,7 +382,7 @@ namespace criptoqrcode
         int vas = 0;
         int valor = 0;
 
-      
+
 
         private void atualiza_received()
         {
@@ -507,7 +524,7 @@ namespace criptoqrcode
                     {
                         vas = 1;
                         File.Copy(rede1.Trim() + "data_txt\\data.txt", @"C:\compartilhamento\data_txt\data.txt", true);
-                      //  ler_linha();
+                        //  ler_linha();
 
                     }
 
@@ -528,9 +545,9 @@ namespace criptoqrcode
                 if (fdata0 > fdata1)
                 {
 
-                    // File.Copy(@"C:\compartilhamento\data_txt\data2.txt", rede1.Trim() + "data_txt\\data2.txt", true);
-                    // int count = File.ReadAllLines(@"C:\compartilhamento\data_txt\data2.txt").Length;
-                    // label3.Text = count.ToString().Trim();
+                    File.Copy(@"C:\compartilhamento\data_txt\data2.txt", rede1.Trim() + "data_txt\\data2.txt", true);
+                    int count = File.ReadAllLines(@"C:\compartilhamento\data_txt\data2.txt").Length;
+                    label3.Text = count.ToString().Trim();
                 }
 
 
@@ -577,164 +594,148 @@ namespace criptoqrcode
 
         private void atualiza_compartilhamento()
         {
-           
+           // myThread.Abort();
+             string rede2 = rede1.Replace(".lan", "");
+          synch_db(rede2);
 
-            string linha;
-            using (StreamReader reader = new StreamReader(@"C:\\compartilhamento\recebido.txt"))
-            {
-                linha = reader.ReadLine();
-            }
+            //Message box rede2
+        //    MessageBox.Show(rede2);
+                            // Console.WriteLine($"Máquina ativa encontrada em: {rede1.Trim()}");
 
-            soma = 1;
-            // timer9.Enabled= false;
-            // somando = 0;
+                            
 
-            //  if (p == 1)
-            //  {
-            //   MessageBox.Show(p.ToString());
 
-            //  MessageBox.Show(rede1.ToString());
+                            rede = rede2.Split('\\')[2].Trim();
 
-            rec = false;
-            p = 0;
+                            string linha;
+                            using (StreamReader reader = new StreamReader(@"C:\\compartilhamento\recebido.txt"))
+                            {
+                                linha = reader.ReadLine();
+                            }
 
-            vas = 0;
-            l = 1;
-            try
-            {
-              
-          
-                    DateTime fvessel = File.GetLastWriteTime(@"C:\compartilhamento\data_txt\PROJETO.txt");
-                    DateTime fvesse2 = File.GetLastWriteTime(rede1.Trim() + "\\data_txt\\PROJETO.txt");
-                    if (fvessel > fvesse2)
+                            soma = 1;
+                            // timer9.Enabled= false;
+                            // somando = 0;
+
+                            //  if (p == 1)
+                            //  {
+                            //   MessageBox.Show(p.ToString());
+
+                            //  MessageBox.Show(rede1.ToString());
+
+                            rec = false;
+                            p = 0;
+
+                            vas = 0;
+                            l = 1;
+                try
+                {
+                    //      MessageBox.Show(rede1.Trim() + " Before Synch");
+
+
+                    if (rede2 != null)
                     {
-                 
-                        File.Copy(@"C:\compartilhamento\data_txt\PROJETO.txt", rede1.Trim() + "data_txt\\PROJETO.txt", true);
-              
+                        DateTime fvessel = File.GetLastWriteTime(@"C:\compartilhamento\data_txt\PROJETO.txt");
+                        DateTime fvesse2 = File.GetLastWriteTime(rede2.Trim() + "\\data_txt\\PROJETO.txt");
+                        if (fvessel > fvesse2)
+                        {
 
-                        //  copyAll(@"C:\compartilhamento\data_new_picture\", @"C:\compartilhamento\data_picture\");
-                        //  copyAll(@"C:\compartilhamento\data_txt\PROJETO.txt", rede1.Trim() + "data_txt\\PROJETO.txt");
-                        // clearFolder(@"C:\compartilhamento\data_new_picture\");
-
+                            File.Copy(@"C:\compartilhamento\data_txt\PROJETO.txt", rede2.Trim() + "data_txt\\PROJETO.txt", true);
 
 
-
-
-                    }
-               // 
-
-                if (fvessel < fvesse2)
-                    {
-                    string caminhoArquivo3 = rede1.Trim() + "\\recebido.txt";
-                    // Abre o arquivo para escrita
-                    using (StreamWriter sw = new StreamWriter(caminhoArquivo3))
-                    {
-                        sw.WriteLine("0"); // Escreve o número 1 na primeira linha do arquivo
-                    }
-
-                    File.Copy(rede1.Trim() + "data_txt\\PROJETO.txt", @"C:\compartilhamento\data_txt\PROJETO.txt", true);
-                        //  copyAll(@"C:\compartilhamento\data_new_picture\", @"C:\compartilhamento\data_picture\");
-                        // copyAll(@"C:\compartilhamento\logo_criptoqrcode\", rede1.Trim() + "data_txt\\PROJETO.txt");
-
-                        //   copyAll(rede1.Trim() + "data_txt\\PROJETO.txt", @"C:\compartilhamento\data_txt\PROJETO.txt");
-                        // clearFolder(@"C:\compartilhamento\data_new_picture\");
-
-                    }
+                            //  copyAll(@"C:\compartilhamento\data_new_picture\", @"C:\compartilhamento\data_picture\");
+                            //  copyAll(@"C:\compartilhamento\data_txt\PROJETO.txt", rede1.Trim() + "data_txt\\PROJETO.txt");
+                            // clearFolder(@"C:\compartilhamento\data_new_picture\");
 
 
 
 
 
-                    DateTime flogo = File.GetLastWriteTime(@"C:\compartilhamento\logo_criptoqrcode\");
-                    DateTime flogo1 = File.GetLastWriteTime(rede1.Trim() + "logo_criptoqrcode\\");
-                    if (flogo > flogo1)
-                    {
+                        }
+                        // 
+
+                        if (fvessel < fvesse2)
+                        {
+                            string caminhoArquivo3 = rede2.Trim() + "\\recebido.txt";
+                            // Abre o arquivo para escrita
+                            using (StreamWriter sw = new StreamWriter(caminhoArquivo3))
+                            {
+                                sw.WriteLine("0"); // Escreve o número 1 na primeira linha do arquivo
+                            }
+
+                            File.Copy(rede2.Trim() + "data_txt\\PROJETO.txt", @"C:\compartilhamento\data_txt\PROJETO.txt", true);
+                            //  copyAll(@"C:\compartilhamento\data_new_picture\", @"C:\compartilhamento\data_picture\");
+                            // copyAll(@"C:\compartilhamento\logo_criptoqrcode\", rede1.Trim() + "data_txt\\PROJETO.txt");
+
+                            //   copyAll(rede1.Trim() + "data_txt\\PROJETO.txt", @"C:\compartilhamento\data_txt\PROJETO.txt");
+                            // clearFolder(@"C:\compartilhamento\data_new_picture\");
+
+                        }
 
 
-                        //  copyAll(@"C:\compartilhamento\data_new_picture\", @"C:\compartilhamento\data_picture\");
-                        copyAll(@"C:\compartilhamento\logo_criptoqrcode\", rede1.Trim() + "logo_criptoqrcode\\");
-                        // clearFolder(@"C:\compartilhamento\data_new_picture\");
-
-                    }
-               
 
 
-                DateTime fpicture = File.GetLastWriteTime(@"C:\compartilhamento\data_new_picture\");
-                    if (rede1 != null)
-                    {
-                        DateTime fpicture1 = File.GetLastWriteTime(rede1.Trim() + "data_new_picture\\");
+
+                        DateTime flogo = File.GetLastWriteTime(@"C:\compartilhamento\logo_criptoqrcode\");
+                        DateTime flogo1 = File.GetLastWriteTime(rede2.Trim() + "logo_criptoqrcode\\");
+                        if (flogo > flogo1)
+                        {
+
+
+                            //  copyAll(@"C:\compartilhamento\data_new_picture\", @"C:\compartilhamento\data_picture\");
+                            copyAll(@"C:\compartilhamento\logo_criptoqrcode\", rede2.Trim() + "logo_criptoqrcode\\");
+                            // clearFolder(@"C:\compartilhamento\data_new_picture\");
+
+                        }
+
+
+                        DateTime fpicture = File.GetLastWriteTime(@"C:\compartilhamento\data_new_picture\");
+
+                        DateTime fpicture1 = File.GetLastWriteTime(rede2.Trim() + "data_new_picture\\");
                         if (fpicture > fpicture1)
                         {
 
                             copyAll(@"C:\compartilhamento\data_new_picture\", @"C:\compartilhamento\data_picture\");
-                            copyAll(@"C:\compartilhamento\data_new_picture\", rede1.Trim() + "data_picture\\");
+                            copyAll(@"C:\compartilhamento\data_new_picture\", rede2.Trim() + "data_picture\\");
                             clearFolder(@"C:\compartilhamento\data_new_picture\");
 
                         }
-                    //  MessageBox.Show("data_picture ok");
-
-                   
-
-                    DateTime ftime = File.GetLastWriteTime(@"C:\compartilhamento\data_base\" + label18.Text.Trim());
-                        DateTime ftime1 = File.GetLastWriteTime(rede1.Trim() + "data_base\\" + label18.Text.Trim());
-
-                
-                    //MessageBox.Show(ftime2.ToString());
-                    if (ftime > ftime1)
-                        {
-                        // MessageBox.Show(ftime.ToString());
-                        // File.Copy(rede.Trim() + "data_base\\" + label18.Text.Trim(), rede.Trim() + "data_base\\" + label18.Text.Trim() + ".backup", true);
-                        //  File.Delete(rede.Trim() + "data_base\\" + label18.Text.Trim());
-                      //  if (linha == "1")
-                      //  {
-                          
-
-                            File.Copy(@"C:\compartilhamento\data_base\" + label18.Text.Trim(), rede1.Trim() + "data_base\\" + label18.Text.Trim(), true);
-                            // MessageBox.Show("data_base maior");
-                         //   MessageBox.Show("ok");
-                        //    linha = "0";
-                      //  }
-
-                        }
-                 
-                    if (ftime1 > ftime)
-                        {
-
-                            // File.Copy(@"C:\compartilhamento\data_base\" + label18.Text.Trim(), @"C:\compartilhamento\data_base\" + label18.Text.Trim() + ".backup", true);
-                            //  File.Delete(@"C:\compartilhamento\data_base\" + label18.Text.Trim());
-                            File.Copy(rede1.Trim() + "data_base\\" + label18.Text.Trim(), @"C:\compartilhamento\data_base\" + label18.Text.Trim(), true);
-                            // MessageBox.Show("data_base menor");
-                        }
-
-                   
-
-                    ///  MessageBox.Show("data_base ok");
-
-                    ////////////////////////////////////////
-                    ///
+                        //  MessageBox.Show("data_picture ok");
 
 
-                    DateTime fdata = File.GetLastWriteTime(@"C:\compartilhamento\data_txt\data.txt");
+
+
+
+
+                        // Uncomment the following line if you want to display a message box indicating the synchronization is done
+                        // MessageBox.Show("data_base ok");
+
+
+                        ////////////////////////////////////////
+                        ///
+
+
+                        DateTime fdata = File.GetLastWriteTime(@"C:\compartilhamento\data_txt\data.txt");
 
                         if (vas == 0)
                         {
 
-                            DateTime f1data = File.GetLastWriteTime(rede1.Trim() + "data_txt\\data.txt");
+                            DateTime f1data = File.GetLastWriteTime(rede2.Trim() + "data_txt\\data.txt");
 
                             if (fdata > f1data)
                             {
                                 vas = 1;
-                            //if (linha == "1")
-                           // {
-                                File.Copy(@"C:\compartilhamento\data_txt\data.txt", rede1.Trim() + "data_txt\\data.txt", true);
-                             //  saida_manual();
-                           //     linha="0";
-                           //  }
+                                //if (linha == "1")
+                                // {
+                                File.Copy(@"C:\compartilhamento\data_txt\data.txt", rede2.Trim() + "data_txt\\data.txt", true);
+                                //  saida_manual();
+                                //     linha="0";
+                                //  }
 
-                            // client.Publish("switch1", Encoding.UTF8.GetBytes("ok 1"), MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE, false);
-                            // File.
-                            // ler_linha();
-                            //  MessageBox.Show(number);
+                                // client.Publish("switch1", Encoding.UTF8.GetBytes("ok 1"), MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE, false);
+                                // File.
+                                // ler_linha();
+                                //  MessageBox.Show(number);
                             }
 
 
@@ -750,8 +751,8 @@ namespace criptoqrcode
                             if (f1data > fdata)
                             {
                                 vas = 1;
-                                File.Copy(rede1.Trim() + "data_txt\\data.txt", @"C:\compartilhamento\data_txt\data.txt", true);
-                               // ler_linha();
+                                File.Copy(rede2.Trim() + "data_txt\\data.txt", @"C:\compartilhamento\data_txt\data.txt", true);
+                                // ler_linha();
 
 
                                 // MessageBox.Show("data menor");
@@ -767,88 +768,202 @@ namespace criptoqrcode
 
 
 
-                        DateTime fdata0 = File.GetLastWriteTime(@"C:\compartilhamento\data_txt\data2.txt");
-                        DateTime fdata1 = File.GetLastWriteTime(rede1.Trim() + "data_txt\\data2.txt");
+                        int fdata0 = File.ReadAllLines(@"C:\compartilhamento\data_txt\data2.txt").Length;
+                        int fdata1 = File.ReadAllLines(rede2.Trim() + "data_txt\\data2.txt").Length;
 
                         if (fdata0 > fdata1)
                         {
-                      //  if (linha == "1")
-                      //  {
+                            //  if (linha == "1")
+                            //  {
 
-                            File.Copy(@"C:\compartilhamento\data_txt\data2.txt", rede1.Trim() + "data_txt\\data2.txt", true);
+                            File.Copy(@"C:\compartilhamento\data_txt\data2.txt", rede2.Trim() + "data_txt\\data2.txt", true);
                             int count = File.ReadAllLines(@"C:\compartilhamento\data_txt\data2.txt").Length;
                             label3.Text = count.ToString().Trim();
-                         //   linha = "0";
-                       // }  
+                            //   linha = "0";
+                            // }  
                         }
 
 
                         if (fdata1 > fdata0)
                         {
                             //   File.Delete(@"C:\compartilhamento\data_txt\data2.txt");
-                            File.Copy(rede1.Trim() + "data_txt\\data2.txt", @"C:\compartilhamento\data_txt\data2.txt", true);
-                            int count = File.ReadAllLines(@"C:\compartilhamento\data_txt\data2.txt").Length;
-                            label3.Text = count.ToString().Trim();
+                            File.Copy(rede2.Trim() + "data_txt\\data2.txt", @"C:\compartilhamento\data_txt\data2.txt", true);
+                            int count2 = File.ReadAllLines(@"C:\compartilhamento\data_txt\data2.txt").Length;
+                            label3.Text = count2.ToString().Trim();
 
 
                         }
+                        //     MessageBox.Show("data");
 
 
 
 
-                         
 
+
+
+                        string caminhoArquivo = rede2.Trim() + "data_txt\\data4.txt";
+                        // Abre o arquivo para escrita
+                        //   using (StreamWriter sw = new StreamWriter(caminhoArquivo))
+                        //   {
+                        //      sw.WriteLine("1"); // Escreve o número 1 na primeira linha do arquivo
+                        //   }
+
+                        // somando++;
+
+                        //   string caminhoArquivo2 = rede1.Trim() + "\\recebido.txt";
+                        // Abre o arquivo para escrita
+                        //  using (StreamWriter sw = new StreamWriter(caminhoArquivo2))
+                        // {
+                        // sw.WriteLine("1"); // Escreve o número 1 na primeira linha do arquivo
+                        // }
+
+                        // MessageBox.Show(rede1.Trim());
+
+                        MessageBox.Show("ok");
+                    }
+                  
+                }
+                catch (Exception ex)
+                {
+                    // somando--;
+                    if (rede2 != null)
+                    {
+                        MessageBox.Show(rede2.Trim() + "  " + ex.Message);
+                        ///   MessageBox.Show("falha");
+                        // valor++;
+                        // panel12.BackColor = Color.Black;
+                    }
+                }
+
+                            //  MessageBox.Show("ok");
+                            l = 0;
+
+                            comp = 1;
+                            //  string nomeArquivo3 = rede1.Trim() + "lock.txt";
+                            //  using (StreamWriter writer = new StreamWriter(nomeArquivo3, false)) //@"\data_full\vessel\local_list.txt("C:\\data_full\\local.txt", true))
+                            //  {
+                            //    writer.WriteLine("0");
+                            //    writer.Close();
+                            // }
+
+
+
+                            rec = true;
+                            soma = 0;
+                            /// timer9.Enabled = true;
+                            //   timer9.Enabled = true;
+                        
+        }
+
+
+        private void synch_db(String rede)
+        {
+            try
+            {
+                using (new NetworkConnection(rede, new NetworkCredential("111111", "469618106086")))
+                {
+                    string localDbPath = @"C:\compartilhamento\dados\banco.db";
+                    string rede2 = rede.Replace(".lan", "");
+                    string remoteDbPath = rede2 + "\\dados\\banco.db";
+
+                    List<Usuario> localUsers;
+                    List<Usuario> remoteUsers;
+                    List<Cadastro> localCadastro;
+                    List<Cadastro> remoteCadastro;
+
+                    using (var localDb = new LiteDatabase(localDbPath))
+                    {
+                        localUsers = localDb.GetCollection<Usuario>("usuario").FindAll().ToList();
+                        localCadastro = localDb.GetCollection<Cadastro>("cadastro").FindAll().ToList();
                     }
 
-                    string caminhoArquivo = rede1.Trim() + "data_txt\\data4.txt";
-                // Abre o arquivo para escrita
-                //   using (StreamWriter sw = new StreamWriter(caminhoArquivo))
-                //   {
-                //      sw.WriteLine("1"); // Escreve o número 1 na primeira linha do arquivo
-                //   }
+                    using (var remoteDb = new LiteDatabase(remoteDbPath))
+                    {
+                        remoteUsers = remoteDb.GetCollection<Usuario>("usuario").FindAll().ToList();
+                        remoteCadastro = remoteDb.GetCollection<Cadastro>("cadastro").FindAll().ToList();
+                    }
 
-                // somando++;
+                    SynchronizeDatabases(localDbPath, remoteDbPath, localUsers, remoteUsers);
+                    SynchronizeCadastroDatabases(localDbPath, remoteDbPath, localCadastro, remoteCadastro);
+                    MessageBox.Show("ok");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(rede.Trim() + "  " + ex.Message);
+            }
+        }
 
-                //   string caminhoArquivo2 = rede1.Trim() + "\\recebido.txt";
-                // Abre o arquivo para escrita
-                //  using (StreamWriter sw = new StreamWriter(caminhoArquivo2))
-                // {
-                // sw.WriteLine("1"); // Escreve o número 1 na primeira linha do arquivo
-                // }
+        void SynchronizeDatabases(string localDbPath, string remoteDbPath, List<Usuario> localUsers, List<Usuario> remoteUsers)
+        {
+            try
+            {
 
-            
+
+
+                // Find the intersection and the unique users from each database
+                var intersectUsers = localUsers.Intersect(remoteUsers).ToList();
+                var localUniqueUsers = localUsers.Except(intersectUsers).ToList();
+                var remoteUniqueUsers = remoteUsers.Except(intersectUsers).ToList();
+
+                // Update the local database with unique users from the remote database
+                using (var localDb = new LiteDatabase(localDbPath))
+                {
+                    var userCollection = localDb.GetCollection<Usuario>("usuario");
+                    userCollection.InsertBulk(remoteUniqueUsers);
+                }
+
+                // Update the remote database with unique users from the local database
+                using (var remoteDb = new LiteDatabase(remoteDbPath))
+                {
+                    var userCollection = remoteDb.GetCollection<Usuario>("usuario");
+                    userCollection.InsertBulk(localUniqueUsers);
+                }
+
 
             }
             catch (Exception ex)
             {
-                // somando--;
+                // Log the exception details
 
-                //   MessageBox.Show(ex.Message);
-                ///   MessageBox.Show("falha");
-                // valor++;
-               // panel12.BackColor = Color.Black;
-               
             }
-    
-            //  MessageBox.Show("ok");
-            l = 0;
 
-            comp = 1;
-            //  string nomeArquivo3 = rede1.Trim() + "lock.txt";
-            //  using (StreamWriter writer = new StreamWriter(nomeArquivo3, false)) //@"\data_full\vessel\local_list.txt("C:\\data_full\\local.txt", true))
-            //  {
-            //    writer.WriteLine("0");
-            //    writer.Close();
-            // }
-
-
-
-            rec = true;
-            soma = 0;
-            /// timer9.Enabled = true;
-         //   timer9.Enabled = true;
         }
 
+        void SynchronizeCadastroDatabases(string localDbPath, string remoteDbPath, List<Cadastro> localCadastro, List<Cadastro> remoteCadastro)
+        {
+            try
+            {
+
+
+
+                // Find the intersection and the unique users from each database
+                var intersectCadastro = localCadastro.Intersect(remoteCadastro).ToList();
+                var localUniqueCadastro = localCadastro.Except(intersectCadastro).ToList();
+                var remoteUniqueCadastro = remoteCadastro.Except(intersectCadastro).ToList();
+
+                // Update the local database with unique users from the remote database
+                using (var localDb = new LiteDatabase(localDbPath))
+                {
+                    var cadastroCollection = localDb.GetCollection<Cadastro>("cadastro");
+                    cadastroCollection.InsertBulk(remoteUniqueCadastro);
+                }
+
+                // Update the remote database with unique users from the local database
+                using (var remoteDb = new LiteDatabase(remoteDbPath))
+                {
+                    var cadastroCollection = remoteDb.GetCollection<Cadastro>("cadastro");
+                    cadastroCollection.InsertBulk(localUniqueCadastro);
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                // Log the exception details
+
+            }
+        }
 
         System.Data.DataTable dt = new System.Data.DataTable();
         private DataSet ds;
@@ -961,6 +1076,7 @@ namespace criptoqrcode
 
                     //  bm.Save(@"C:\data_picture\qr\Qrcode10.png", ImageFormat.Png);
                     pd.Print();
+                    pd.Print();
                     // label5.Visible = false;
                     /// label4.Visible = false;
 
@@ -987,14 +1103,20 @@ namespace criptoqrcode
         {
             try
             {
+
                 // richTextBox16.Text = secondLine.Split(':')[1].Trim();
                 string bio = listBox1.SelectedItem.ToString().Trim();
                 // string secondLine2 = File.ReadLines(@"C:\compartilhamento\data_txt\data2.txt").ElementAtOrDefault(Int16.Parse(bio.Split(':')[0]));
                 //  Number: 1 : Name: Cristiano: Compay: Googlemarine: Funcition: Engenheiro: Id: 111098414 : E - mail : 1 : Vessel: Googlemarine: Project: 190603 : ASO: 22 / 02 / 2023 : NR - 34 : 22 / 02 / 2023 : Vaccine - 1 : 22 / 02 / 2023 : Vaccine - 2 : 22 / 02 / 2023 : Booster vaccine : 22 / 02 / 2023 : Bloqueado: GUSTAVO: Falta da quarta dose da vacina
                 int rich2 = Int32.Parse(label3.Text);
                 //  int lab3 = Int16.Parse(label3.Text);
+
+
+
+
                 for (int i = 0; i < Int32.Parse(label3.Text); i++)
                 {
+                    //print "entrou no for"
 
                     string secondLine = File.ReadLines(@"C:\compartilhamento\data_txt\data2.txt").ElementAtOrDefault(i);
                     if (secondLine != null)
@@ -1013,40 +1135,33 @@ namespace criptoqrcode
 
                                 // 0      1    2              3             4         5             6           7      8       9          10                    11                      12         13          14      15      16        17           18            19            20              22              23               24               25              26         27   28
                                 // Number: 1 : Name: CRISTIANO CALHEIROS : Compay: GOOGLEMARINE: Funcition: ENGENHEIRO: Id: 111098414 : E - mail : cristiano.engenharia.ac @gmail.com: Vessel: Googlemarine: Project: 190605 : ASO: 02 / 02 / 2025 : NR - 34 : 02 / 02 / 2025 : Vaccine - 1 : 02 / 02 / 2025 : Vaccine - 2 : 02 / 02 / 2025 : Booster vaccine : 02 / 02 / 2025 :  : COMUM:
-                                pasta = app.Workbooks.Open(@"C:\compartilhamento\data_base\" + label18.Text);
-                                plan = pasta.Worksheets["Planilha1"];
-                                int lastRow = plan.Cells.SpecialCells(XlCellType.xlCellTypeLastCell, Type.Missing).Row;
 
-                                txtCodigoFunci.Text = lastRow.ToString();
-                                lastRow++;
                                 output_data = DateTime.Now.ToString("MM/dd/yyyy").Trim();
                                 output_hora = DateTime.Now.ToString("HH:mm:ss tt").Trim();
 
-                                plan.Cells[lastRow, 1] = secondLine.Split(':')[1].Trim();
-                                plan.Cells[lastRow, 2] = secondLine.Split(':')[3].Trim();
-                                plan.Cells[lastRow, 3] = secondLine.Split(':')[5].Trim();
-                                plan.Cells[lastRow, 4] = secondLine.Split(':')[7].Trim();
-                                plan.Cells[lastRow, 5] = secondLine.Split(':')[9].Trim();
-                                plan.Cells[lastRow, 6] = secondLine.Split(':')[11].Trim();
-                                plan.Cells[lastRow, 7] = secondLine.Split(':')[13].Trim();
-                                //  plan.Cells[lastRow, 9] = secondLine.Split(':')[17];
-                                plan.Cells[lastRow, 10] = ""; // input;
-                                plan.Cells[lastRow, 11] = "";
-                                plan.Cells[lastRow, 12] = output_data;
-                                plan.Cells[lastRow, 13] = output_hora + ": MANUAL PELO USUÁRIO";
-                                plan.Cells[lastRow, 14] = secondLine.Split(':')[15].Trim();
-                                // plan.Cells[lastRow, 15] = richTextBox12.Text;
-                                // plan.Cells[lastRow, 16] = richTextBox13.Text;
-                                // plan.Cells[lastRow, 17] = richTextBox14.Text;
-                                plan.Cells[lastRow, 24] = comuser.Text;
-                                pasta.Save();
-                                pasta.Close();
-                                app.Quit();
-                                //  pasta.Close(true, misValue, misValue);
-                                //  xlApp.Quit();
-                                Marshal.ReleaseComObject(pasta);
-                                Marshal.ReleaseComObject(pasta);
-                                Marshal.ReleaseComObject(pasta);
+
+
+
+                                var num = secondLine.Split(':')[1].Trim();
+                                var nome = secondLine.Split(':')[3].Trim();
+                                var empresa = secondLine.Split(':')[5].Trim();
+                                var funcao = secondLine.Split(':')[7].Trim();
+                                var id = secondLine.Split(':')[9].Trim();
+                                var email = secondLine.Split(':')[11].Trim();
+                                var vessel = secondLine.Split(':')[13].Trim();
+                                var checked_in_val = "";
+                                var check_out_val = "";
+                                var checked_in_data = "*";
+                                var checked_in_hora = "*";
+                                var checked_out_data = output_data;
+                                var checked_out_hora = output_hora + ": MANUAL PELO USUÁRIO";
+                                var user = comuser.Text;
+
+                                //create and populate new Usuario
+                                Usuario usuario = new Usuario(
+                                     Int32.Parse(num), nome, empresa, funcao, Int32.Parse(id), email, vessel, checked_in_val, check_out_val, checked_in_data, checked_in_hora, checked_out_data, checked_out_hora, "", "", "", "", "", "", "", "", "", "", user);
+                                add_data2(usuario);
+
                             }
                             catch
                             {
@@ -1118,7 +1233,7 @@ namespace criptoqrcode
             }
             vinteum = localname;
 
-            string contentToAppend = richTextBox16.Text.Trim() + "," + richTextBox2.Text.Trim() + "," + richTextBox1.Text.Trim() + "," + richTextBox3.Text.Trim() + "," + richTextBox4.Text.Trim() + "," + richTextBox8.Text.Trim() + "," + comboBox1.Text.Trim() + "," + richTextBox6.Text.Trim() + "  Até  " + richTextBox7.Text.Trim() + "," + "." + richTextBox7.Text.Trim() + "," + input_data.Trim() + "," + input_hora.Trim() + "," + output_data.Trim() + "," + output_hora.Trim() + "," + richTextBox9.Text.Trim() + "," + richTextBox10.Text.Trim() + "," + richTextBox11.Text.Trim() + "," + richTextBox12.Text.Trim() + "," + richTextBox13.Text.Trim() + "," + richTextBox14.Text.Trim() + "," + vinte + ","+vinteum+"," + vintedois + "," + vintequatro + ",";
+            string contentToAppend = richTextBox16.Text.Trim() + "," + richTextBox2.Text.Trim() + "," + richTextBox1.Text.Trim() + "," + richTextBox3.Text.Trim() + "," + richTextBox4.Text.Trim() + "," + richTextBox8.Text.Trim() + "," + comboBox1.Text.Trim() + "," + richTextBox6.Text.Trim() + "  Até  " + richTextBox7.Text.Trim() + "," + "." + richTextBox7.Text.Trim() + "," + input_data.Trim() + "," + input_hora.Trim() + "," + output_data.Trim() + "," + output_hora.Trim() + "," + richTextBox9.Text.Trim() + "," + richTextBox10.Text.Trim() + "," + richTextBox11.Text.Trim() + "," + richTextBox12.Text.Trim() + "," + richTextBox13.Text.Trim() + "," + richTextBox14.Text.Trim() + "," + vinte + "," + vinteum + "," + vintedois + "," + vintequatro + ",";
 
             // Verifica se o arquivo existe antes de tentar adicionar o conteúdo
             if (File.Exists(filePath))
@@ -1176,7 +1291,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                 output_hora = DateTime.Now.ToString("hh:mm:ss tt");
 */
 
-            string contentToAppend = nb + "," + richTextBox2.Text + "," + richTextBox1.Text + "," + richTextBox3.Text + "," + richTextBox4.Text + "," + richTextBox8.Text + "," + comboBox1.Text + "," + richTextBox6.Text.Trim() + "  Até  " + richTextBox7.Text.Trim() + "," + "." + richTextBox7.Text + ","+ input_data+","+ input_hora+","+ output_data+","+ output_hora+"," + richTextBox9.Text.Trim() + "," + richTextBox10.Text.Trim() + "," + richTextBox11.Text.Trim() + "," + richTextBox12.Text.Trim() + "," + richTextBox13.Text.Trim() + "," + richTextBox14.Text.Trim() + "," + vinte + ",," + vintedois + ",," + vintequatro + ",";
+            string contentToAppend = nb + "," + richTextBox2.Text + "," + richTextBox1.Text + "," + richTextBox3.Text + "," + richTextBox4.Text + "," + richTextBox8.Text + "," + comboBox1.Text + "," + richTextBox6.Text.Trim() + "  Até  " + richTextBox7.Text.Trim() + "," + "." + richTextBox7.Text + "," + input_data + "," + input_hora + "," + output_data + "," + output_hora + "," + richTextBox9.Text.Trim() + "," + richTextBox10.Text.Trim() + "," + richTextBox11.Text.Trim() + "," + richTextBox12.Text.Trim() + "," + richTextBox13.Text.Trim() + "," + richTextBox14.Text.Trim() + "," + vinte + ",," + vintedois + ",," + vintequatro + ",";
             plan.Cells[lastRow, 1] = richTextBox16.Text;
             plan.Cells[lastRow, 2] = richTextBox2.Text;
             plan.Cells[lastRow, 3] = richTextBox1.Text;
@@ -1243,12 +1358,12 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
             Marshal.ReleaseComObject(pasta);
             Marshal.ReleaseComObject(pasta);
 
-            checa_host();
+            ///  checa_host();
 
 
             try
             {
-                  checa_host();
+                //   checa_host();
                 // atualiza_compartilhamento();
 
             }
@@ -1493,25 +1608,35 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
         private void carrega_planilha2_txt()
         {
             string filePath = "C:\\compartilhamento\\data_base\\novo.txt";
-        
+
             if (richTextBox16.Text == "")
             {
                 nb = number2.ToString();
             }
             if (richTextBox16.Text != "")
             {
-                nb= richTextBox16.Text.Trim();
+                nb = richTextBox16.Text.Trim();
             }
             if (alter == true)
             {
                 vintequatro = comuser.Text + ": " + DateTime.Now;
-                vintedois = "CADASTRO ALTERADO";
+                vintedois = "ALTERADO";
+                alter = false;
             }
-            if (alter == false)
+            if (print_ == true)
             {
-                vintedois = qr_generate + ": " + DateTime.Now;
-                vintequatro = comuser.Text;
+                vintequatro = comuser.Text + ": " + DateTime.Now;
+                vintedois = "PRINTED";
+                print_ = false;
+
             }
+            if (lido == true)
+            {
+                vintedois = "LIDO";
+                vintequatro = comuser.Text + ": " + DateTime.Now;
+                lido = false;
+            }
+
             if (cad == true)
             {
                 vintequatro = comuser.Text + ": " + DateTime.Now;
@@ -1557,7 +1682,43 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
             }
 
 
-            string contentToAppend = nb+","+ richTextBox2.Text+","+ richTextBox1.Text+","+ richTextBox3.Text+","+ richTextBox4.Text+","+ richTextBox8.Text+","+ comboBox1.Text+","+ richTextBox6.Text+","+ "." + richTextBox7.Text+ ",,,,,"+richTextBox9.Text.Trim()+","+ richTextBox10.Text.Trim()+","+ richTextBox11.Text.Trim()+","+ richTextBox12.Text.Trim()+","+ richTextBox13.Text.Trim()+","+ richTextBox14.Text.Trim()+","+vinte+",,"+vintedois+",,"+ vintequatro + "," ;
+            string contentToAppend = nb + "," + richTextBox2.Text + "," + richTextBox1.Text + "," + richTextBox3.Text + "," + richTextBox4.Text + "," + richTextBox8.Text + "," + comboBox1.Text + "," + richTextBox6.Text + "," + "." + richTextBox7.Text + ",,,,," + richTextBox9.Text.Trim() + "," + richTextBox10.Text.Trim() + "," + richTextBox11.Text.Trim() + "," + richTextBox12.Text.Trim() + "," + richTextBox13.Text.Trim() + "," + richTextBox14.Text.Trim() + "," + vinte + ",," + vintedois + ",," + vintequatro + ",";
+
+            //string to int function
+            int number = Int32.Parse(richTextBox16.Text);
+            //identidade string to int function
+            int identidade = Int32.Parse(richTextBox4.Text);
+
+            //create new Usuario() object and assign values to its properties respectively
+            Usuario usuario = new Usuario(
+                number,
+                richTextBox2.Text,
+                richTextBox1.Text,
+                richTextBox3.Text,
+                identidade,
+                richTextBox8.Text,
+                comboBox1.Text,
+                richTextBox6.Text + "  Até  " + richTextBox7.Text,
+                "." + richTextBox7.Text,
+                input_data,
+                input_hora,
+                output_data,
+                output_hora,
+                richTextBox9.Text,
+                richTextBox10.Text,
+                richTextBox11.Text,
+                richTextBox12.Text,
+                richTextBox13.Text,
+                richTextBox14.Text,
+                vinte,
+                vinteum,
+                vintedois,
+                vintequatro,
+                comuser.Text + ": " + DateTime.Now
+                );
+
+            add_data2(usuario);
+
 
             // Verifica se o arquivo existe antes de tentar adicionar o conteúdo
             if (File.Exists(filePath))
@@ -1572,6 +1733,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                 Console.WriteLine("Conteúdo adicionado com sucesso.");
             }
         }
+
         private void CarregarPlanilha2()
         {
             try
@@ -1688,8 +1850,8 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                 Marshal.ReleaseComObject(pasta);
                 Marshal.ReleaseComObject(pasta);
                 //  atualiza_compartilhamento();
-               // myThread.Abort();
-                checa_host();
+                // myThread.Abort();
+                //   checa_host();
                 //  MessageBox.Show("CarregarPlanilha - atualiza excel");
 
             }
@@ -1912,7 +2074,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
 
         private static string GetFiles(string path)
         {
-            
+
             var file = new DirectoryInfo(path).GetFiles().OrderByDescending(o => o.LastWriteTime).FirstOrDefault();
             return file.Name;
             // label18.Text =
@@ -2216,7 +2378,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                 // label27.Text = Linhas.ToString();
                 //  }
                 label27.Text = Linhas.ToString();
-              //  label67.Text = label27.Text;
+                //  label67.Text = label27.Text;
 
                 //  string number = System.IO.File.ReadAllText(@"C:\compartilhamento\data_txt\count.txt");
                 label3.Text = number;
@@ -2337,6 +2499,19 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
         }
         private void Form1_Load(object sender, EventArgs e)
         {
+            checa_host_ = true;
+            if (!File.Exists(@"C:\compartilhamento\dados\banco.db"))
+            {
+                Create_DB();
+                if (hasDb == true)
+                {
+                    get_last();
+                }
+            }
+            else
+            {
+                get_last();
+            }
 
             ProcessStartInfo startInfo2 = new ProcessStartInfo("cmd", "/K netsh interface set interface \"Ethernet\" ENABLED");
             startInfo2.RedirectStandardOutput = true;
@@ -2376,7 +2551,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
             label48.Visible = false;
             label49.Visible = false;
             label50.Visible = false;
-    
+
             passall = File.ReadAllText(@"C:\compartilhamento\pass\pass.txt");
             //  rede = System.IO.File.ReadAllText(@"C:\compartilhamento\rede.txt");
             // rede1 = File.ReadLines(@"C:\compartilhamento\rede.txt").ElementAtOrDefault(0);
@@ -2541,8 +2716,8 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
 
             GetBiosInformation();
             // CloseExcel();
-           // myThread.Abort();
-          //  checa_host();
+            // myThread.Abort();
+            //  checa_host();
             // atualiza_compartilhamento();
             comp = 1;
 
@@ -2577,7 +2752,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                 // throw new ApplicationException("Image loading error....");
             }
 
-    
+
             int milliseconds = 5000;
             Thread.Sleep(milliseconds);
 
@@ -2595,32 +2770,18 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
 
         public void checa_host()
         {
-
-            if (IP_START.Text == string.Empty)
+            if (IP_START.Text != string.Empty) // Only check for non-empty, no need for double negative
             {
-                //MessageBox.Show("No IP address entered.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                // lblStatus.ForeColor = System.Drawing.Color.Red;
-                // lblStatus.Text = "No IP address entered.";
-            }
-            else
-            {
-
-                //Create new thread for pinging
-                //myThread = new Thread(() => scan(txtIP.Text));
-                myThread = new Thread(() => scan2(IP_START.Text, IP_STOP.Text));
-                myThread.Start();
-
-                if (myThread.IsAlive == true)
+                isSynchronizing = true;
+                myThread = new Thread(() =>
                 {
-                    // cmdStop.Enabled = true;
-                    //  cmdScan.Enabled = false;
-                    // txtIP.Enabled = false;
-                    // txtIP2.Enabled = false;
-                    //  MessageBox.Show("checa_host ok");
-                }
+                    scan2(IP_START.Text, IP_STOP.Text);
+                    isSynchronizing = false;
+                });
+                myThread.Start();
             }
-
         }
+
         static void SetDoubleBuffer(System.Windows.Forms.Control dgv, bool DoubleBuffered)
         {
             typeof(System.Windows.Forms.Control).InvokeMember("DoubleBuffered",
@@ -2629,7 +2790,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
         }
         private async void button3_Click(object sender, EventArgs e)
         {
-           
+
             try
             {
                 String[] Label_initial = { "Inicio", "Check-in" };
@@ -2647,7 +2808,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
 
 
 
-                criar_excel();
+                /// criar_excel();
 
                 if (textBox7.SelectionLength >= 0)
                 {
@@ -2657,7 +2818,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                 plant++;
                 if (plant == 1)
                 {
-                    criar_excel();
+                    //  criar_excel();
                     //if (libera == true)
                     // {
                     button34.Visible = true;
@@ -2678,6 +2839,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                     //  button3.Text = "Close DataBase";
                     //  button1.Enabled = false;
                     //button2.Enabled = false;
+                    /*
                     String name = "Planilha1";
 
 
@@ -2693,15 +2855,12 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                     sda.Fill(data);
                     con.Close();
 
+                    */
 
-                    dataGridView1.Size = new System.Drawing.Size(1693, 800);
-                    dataGridView1.DataSource = data;
-                    this.dataGridView1.DefaultCellStyle.ForeColor = Color.White;
-                    this.dataGridView1.DefaultCellStyle.BackColor = Color.FromArgb(51, 51, 76);
-                    dataGridView1.Visible = true;
-                    dataGridView1.FilterAndSortEnabled = true;
-                    bindingSource1.DataSource = data;
+                    //  dataGridView1.FilterAndSortEnabled = true;
+                    // bindingSource1.DataSource = data;
                     panel5.Visible = false;
+                    DisplayPresetData();
 
                 }
                 else
@@ -2727,6 +2886,10 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
 
                     button1.Enabled = true;
 
+
+                    dataGridView1.DataSource = null;
+                    dataGridView1.CleanFilter();
+
                 }
             }
             catch
@@ -2735,6 +2898,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
             }
 
         }
+
         private void acha_palavra_txt()
         {
             if (l == 0)
@@ -2772,7 +2936,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
-            
+
             BarcodeReader Reader = new BarcodeReader();
             Result result = Reader.Decode((Bitmap)pictureBox1.Image);
             if (result != null)
@@ -2953,12 +3117,12 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                         listBox1.Items.Add(linha22);
                         lista_++;
                         label27.Text = lista_.ToString();
-                      //  label67.Text = label27.Text;
+                        //  label67.Text = label27.Text;
 
 
                     }
                 }
-              //  ler_linha();
+                //  ler_linha();
             }
             else
             {
@@ -2979,7 +3143,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
 
                     }
 
-                  //  ler_linha();
+                    //  ler_linha();
                 }
             }
 
@@ -2998,6 +3162,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
         }
         private void timer3_Tick(object sender, EventArgs e)
         {
+
             try
             {
                 string caminhoArquivo = @"C:\compartilhamento\data_txt\data4.txt";
@@ -3005,8 +3170,8 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                 if (primeiraLinha == "1")
                 {
                     //  panel12.BackColor = Color.GreenYellow;
-                   
-                    
+
+
                     //ler_linha();
                     Console.WriteLine($"A primeira linha do arquivo é: {primeiraLinha}");
 
@@ -3066,7 +3231,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
 
 
             // Name: Henrique Kaique Costa Compay: Local 9  E - Mail: cristiano.engenharia.ac @gmail.com ID: 111099444
-            string textoInserir = "Number: " + richTextBox16.Text + ":  Name: " + richTextBox2.Text + ":  Vessel: " + comboBox1.Text.Trim() + ":  Compay: " + richTextBox1.Text + "  Id: " + richTextBox4.Text + "  :E-Mail: " + richTextBox8.Text+" :  "+DateTime.Now;//
+            string textoInserir = "Number: " + richTextBox16.Text + ":  Name: " + richTextBox2.Text + ":  Vessel: " + comboBox1.Text.Trim() + ":  Compay: " + richTextBox1.Text + "  Id: " + richTextBox4.Text + "  :E-Mail: " + richTextBox8.Text + " :  " + DateTime.Now;//
             int numeroLinha = Convert.ToInt32(Linhas);
             ArrayList linhas = new ArrayList();
 
@@ -3140,13 +3305,13 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                         {
 
                             //Name: Rodrigo  Compay: Googlemarine  Id: 111222333
-                          
-                            ll = RemoveEnd(line,23);
-                           //  MessageBox.Show(ll);
+
+                            ll = RemoveEnd(line, 23);
+                            //  MessageBox.Show(ll);
 
                             // Number: 10  Name: Cristiano de Araujo Calheiros  Compay: Googlemarine Id: 111098414  :E - Mail: cristiano.engenharia.ac @gmail.com
                             if (ll != "Number: " + richTextBox16.Text + ":  Name: " + richTextBox2.Text + ":  Vessel: " + comboBox1.Text.Trim() + ":  Compay: " + richTextBox1.Text + "  Id: " + richTextBox4.Text + "  :E-Mail: " + richTextBox8.Text)
-                               sw.WriteLine(line);
+                                sw.WriteLine(line);
                         }
                     }
                 }
@@ -3159,8 +3324,8 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
 
         private void in_out_alt()
         {
-
-
+            checa_host_ = false;
+            timer9.Enabled = false;
             lbResultado.Items.Clear();
             Refresh();
             string criterio = richTextBox4.Text;// id
@@ -3174,6 +3339,8 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
 
 
 
+
+
             if (lbResultado.Items.Count == 1)
             {
 
@@ -3182,7 +3349,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                 {
 
                     comp = 0;
-                  //   ler_linha();
+                    //   ler_linha();
                     // 
                     //timer8.Stop();
                     pictureBox7.Image = Properties.Resources.barcode1;
@@ -3211,14 +3378,16 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                     // timer1.Start();
                     pictureBox7.Image = Properties.Resources.barcode1;
                     //  CarregarPlanilha();
-                    carrega_planilha_txt();
+                    //   carrega_planilha_txt();
+
                     button8.Visible = false;
                     button9.Visible = false;
                     button10.Visible = false;
-                     checa_host();
+                    //  checa_host();
                     // atualiza_compartilhamento();
-                   // ler_linha();
+                    // ler_linha();
                     // ckecked_false();
+                    carrega_planilha2_txt();
 
                 }
                 catch (Exception ex)
@@ -3276,7 +3445,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                         ler_linha();
                         //  ckecked_false();
                         // CarregarPlanilha();
-                        carrega_planilha_txt();
+                        carrega_planilha2_txt();
                         // checa_host();
                         //atualiza_compartilhamento();
                         comp = 1;
@@ -3292,7 +3461,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                     MessageBox.Show(ex.Message);
                 }
 
-
+                checa_host_ = true;
             }
 
             /////////////////////////////////////////// in/////////////////////////////////////////
@@ -3304,15 +3473,15 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
             /////////////////////////////out///////////////////////
 
             ////////////////////////////////////////////////////////////////
-
+            timer9.Enabled = true;
         }
         private void compare_data()
         {
-           
+
             if (id_onboard2 == true)
             {
-               
-             
+
+
             }
             else
             {
@@ -3573,6 +3742,8 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                         input_ok = 1;
                         panel11.BackColor = Color.GreenYellow;
                         beep();
+
+                        // bool lido = true;
                         button8.Visible = true;
                         button9.Visible = true;
                         button10.Visible = true;
@@ -3593,10 +3764,12 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                         }
                         if (panel11.BackColor == Color.GreenYellow)
                         {
+                            // MessageBox.Show("1");
                             in_out_alt();
+                            //panel11.BackColor =Color.White;
                         }
 
-
+                        rich9 = "";
                     }
 
 
@@ -3613,12 +3786,13 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                     if ((rich5 == comboBox1.Text.Trim()) && (rich9 == richTextBox9.Text.Trim()) && company_loc == false && bb != "Bloqueado")
                     {
 
-                        entrou=true;
+                        entrou = true;
                         label8.Visible = true;
                         label8.Text = "Liberado";
                         input_ok = 1;
                         panel11.BackColor = Color.GreenYellow;
                         beep();
+                        //  bool lido = true;
                         button8.Visible = true;
                         button9.Visible = true;
                         button10.Visible = true;
@@ -3637,10 +3811,12 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                         }
                         if (panel11.BackColor == Color.GreenYellow)
                         {
+                            //  MessageBox.Show("2");
                             in_out_alt();
+                            // panel11.BackColor = Color.White;
                         }
 
-
+                        rich9 = "";
                     }
 
 
@@ -3734,9 +3910,12 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                         if (pass17.Trim() == maskedTextBox3.Text.Trim() && pass18.Trim() == maskedTextBox4.Text.Trim() && pass19.Trim() == maskedTextBox5.Text.Trim() && pass20.Trim() == richTextBox6.Text.Trim() && pass21.Trim() == richTextBox7.Text.Trim() && pass21.Trim() == richTextBox15.Text.Trim())
                         {
                             alter = false; // 
+                            print_ = true;
                         }
                     }
                 }
+
+                
             }
             catch
             {
@@ -3745,11 +3924,11 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
         }
         int test2 = 0;
         private void timer4_Tick(object sender, EventArgs e)
-        { 
-        
+        {
+
             if (vid == 1)
             {
-                  
+
 
 
 
@@ -3833,20 +4012,20 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                             maskedTextBox3.Text = richTextBox12.Text;
                             maskedTextBox4.Text = richTextBox13.Text;
                             maskedTextBox5.Text = richTextBox14.Text;
-                          ///  MessageBox.Show(richTextBox16.Text);
+                            ///  MessageBox.Show(richTextBox16.Text);
 
                             check_id_onboard2();
 
 
-                         
-                            if(id_onboard2== true)
+
+                            if (id_onboard2 == true)
                             {
 
                                 timer4.Stop();
                                 MessageBox.Show("ESTA PESSOA ESTÁ EM OUTRA EMBARCAÇÃO! SERÁ NECESSÁRIO DAR A SAÍDA PARA A LIBERAÇÃO DE ENTRADA A ESTA EMBARCAÇÃO");
-                                   
-                          
-                             
+
+
+
                             }
 
 
@@ -3856,39 +4035,39 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
 
 
                                 if (text10[17].Trim() == "1")
-                            {
-                                local1.Checked = true;
+                                {
+                                    local1.Checked = true;
 
-                            }
-                            if (text10[18].Trim() == "1")
-                            {
-                                local2.Checked = true;
-                            }
-                            if (text10[19].Trim() == "1")
-                            {
-                                local3.Checked = true;
-                            }
-                            if (text10[20].Trim() == "1")
-                            {
-                                local4.Checked = true;
-                            }
-                            if (text10[21].Trim() == "1")
-                            {
-                                level_yellow.Checked = true;
-                            }
-                            if (text10[22].Trim() == "1")
-                            {
-                                level_green.Checked = true;
-                            }
-                            if (text10[23].Trim() == "1")
-                            {
-                                level_red.Checked = true;
-                            }
-                         
+                                }
+                                if (text10[18].Trim() == "1")
+                                {
+                                    local2.Checked = true;
+                                }
+                                if (text10[19].Trim() == "1")
+                                {
+                                    local3.Checked = true;
+                                }
+                                if (text10[20].Trim() == "1")
+                                {
+                                    local4.Checked = true;
+                                }
+                                if (text10[21].Trim() == "1")
+                                {
+                                    level_yellow.Checked = true;
+                                }
+                                if (text10[22].Trim() == "1")
+                                {
+                                    level_green.Checked = true;
+                                }
+                                if (text10[23].Trim() == "1")
+                                {
+                                    level_red.Checked = true;
+                                }
 
-                   
-                        
-                        
+
+
+
+
                                 // path3 = "https://drive.google.com/file/d/" + subs2[5] + "/view?usp=sharing";
                                 // panel11.Visible = true;
                                 //  panel4.Visible = false;
@@ -3898,147 +4077,147 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                                 // string ve = textBox10.Lines[6];
                                 textBox15.Text = text10[7];
 
-                            if (text10[7] == "VESSEL: " + comboBox1.Text.Trim())
-                            {
-                                try
+                                if (text10[7] == "VESSEL: " + comboBox1.Text.Trim())
                                 {
-                                    path2 = richTextBox15.Text;
-                                    subs2 = path2.Split('/');
-                                    path3 = subs2[5];
-                                }
-                                catch
-                                {
-
-                                }
-                                string teste2 = "Number : " + richTextBox16.Text.Trim() + " : Name : " + richTextBox2.Text + " : Compay : " + richTextBox1.Text + " :Funcition:  " + richTextBox3.Text + "  :Id: " + richTextBox4.Text + " : E-mail : " + richTextBox8.Text + " : Vessel : " + comboBox1.Text.Trim() + " : Project : " + richTextBox9.Text + " : ASO : " + richTextBox10.Text + " : NR-34 : " + richTextBox11.Text + " : NR-10 : " + richTextBox12.Text + " : NR-33 : " + richTextBox13.Text + " : NR-35 : " + richTextBox14.Text + " : " + bb + " : " + comuser.Text + " :" + richTextBox17.Text + " :" + " :" + local22 + " :" + richTextBox6.Text + " :" + richTextBox7.Text + " :" + path3;
-                                string filePath = @"C:\compartilhamento\data_txt\data2.txt";
-                                string[] lines = File.ReadAllLines(filePath);
-
-                                for (int i = 0; i < lines.Length; i++)
-                                {
-                                    if (lines[i].Contains(richTextBox4.Text.Trim()))
+                                    try
                                     {
-                                        ver = 1;
-                                        lines[i] = teste2.Trim();
-                                        /// MessageBox.Show("Achei: " + richTextBox4.Text.Trim());
+                                        path2 = richTextBox15.Text;
+                                        subs2 = path2.Split('/');
+                                        path3 = subs2[5];
                                     }
-
-                                }
-                                //and save it:
-
-                                File.WriteAllLines(filePath, lines);
-                                ver = 0;
-
-                            }
-                            //////////////////
-
-
-                            //  pictureBox1.Visible = false;
-                            //  panel4.Visible = false;
-                            //  panel4.Size = new Size(360, 355);
-                            // panel4.Location = new System.Drawing.Point(95, 150);
-                            // pictureBox1.Size = new Size(330, 320);
-                            // pictureBox1.Location = new System.Drawing.Point(15, 18);
-
-                            // panel4.Visible = true;
-                            //  pictureBox1.Visible = true;
-                            // panel10.Visible = false;
-
-
-
-                            // button8.Visible = true;
-                            // button9.Visible = true;
-                            // button10.Visible = true;
-                            // pictureBox1.BackgroundImage = Properties.Resources.barcode1;
-                            int rich1 = Int16.Parse(richTextBox16.Text.Trim()) - 1;
-                            string secondLine2 = File.ReadLines(@"C:\compartilhamento\data_txt\data2.txt").ElementAtOrDefault(rich1);
-                            string sec = secondLine2.Split(':')[26].Trim();
-                            string pass11 = secondLine2.Split(':')[5].Trim();
-                            string pass12 = secondLine2.Split(':')[9].Trim();
-                            string pass13 = secondLine2.Split(':')[3].Trim();
-                            string pass14 = secondLine2.Split(':')[11].Trim();
-                            string pass15 = secondLine2.Split(':')[17].Trim();
-                            string pass16 = secondLine2.Split(':')[19].Trim(); // NR34
-                            string pass17 = secondLine2.Split(':')[21].Trim(); // VA1
-                            string pass18 = secondLine2.Split(':')[23].Trim(); // V2                                                                                                                                                                   //17
-                            string pass19 = secondLine2.Split(':')[25].Trim();// V BOOSTER
-
-                            //   string pass19 = secondLine2.Split(':')[25].Trim();// V BOOSTER
-
-
-
-
-
-                            //  0   1      2                       3        4              5         6              7  8           9         10                                  11      12             13        14      15    16           17     18           19          20            21          22           23               24            25 26     27   
-                            //Number : 1 : Name : CRISTIANO CALHEIROS 3 : Compay : GOOGLEMARINE :Funcition:  ENGENHEIRO  :Id: 1110988400 : E-mail : cristiano.engenharia.ac@gmail.com : Vessel : Googlemarine : Project : 2001 : ASO : 02/02/2024 : NR-34 : 02/02/2025 : Vaccine-1 : 02/02/2026 : Vaccine-2 : 02/02/2027 : Booster vaccine : 02/02/2028 :  : COMUM :
-                            if (pass11.Trim() != richTextBox1.Text.Trim())  //COMPANY
-                            {
-                                company_loc = true;
-                            }
-
-
-
-                            if (pass12.Trim() != richTextBox4.Text.Trim())  // IDENTIDADE
-                            {
-                                company_loc = true;
-                            }
-
-                            if (pass13.Trim() != richTextBox2.Text.Trim()) // NOME
-                            {
-                                company_loc = true;
-                            }
-
-                            if (pass14.Trim() != richTextBox8.Text.Trim()) // email
-                            {
-                                company_loc = true;
-                            }
-                            if (pass15.Trim() != maskedTextBox1.Text.Trim()) // aso
-                            {
-                                company_loc = true;
-                            }
-                            if (pass16.Trim() != maskedTextBox2.Text.Trim()) // nr34
-                            {
-                                company_loc = true;
-                            }
-                            if (pass17.Trim() != maskedTextBox3.Text.Trim()) // vacina 1
-                            {
-                                company_loc = true;
-                            }
-                            if (pass18.Trim() != maskedTextBox4.Text.Trim()) // vacina 2
-                            {
-                                company_loc = true;
-                            }
-                            if (pass19.Trim() != maskedTextBox5.Text.Trim()) // vacina reforço
-                            {
-                                company_loc = true;
-                            }
-
-
-                            if (pass11.Trim() == richTextBox1.Text.Trim() && pass12.Trim() == richTextBox4.Text.Trim() && pass13.Trim() == richTextBox2.Text.Trim())
-                            {
-                                if (pass14.Trim() == richTextBox8.Text.Trim() && pass15.Trim() == maskedTextBox1.Text.Trim() && pass16.Trim() == maskedTextBox2.Text.Trim())
-                                {
-                                    if (pass17.Trim() == maskedTextBox3.Text.Trim() && pass18.Trim() == maskedTextBox4.Text.Trim() && pass19.Trim() == maskedTextBox5.Text.Trim())
+                                    catch
                                     {
-                                        company_loc = false; // 
+
+                                    }
+                                    string teste2 = "Number : " + richTextBox16.Text.Trim() + " : Name : " + richTextBox2.Text + " : Compay : " + richTextBox1.Text + " :Funcition:  " + richTextBox3.Text + "  :Id: " + richTextBox4.Text + " : E-mail : " + richTextBox8.Text + " : Vessel : " + comboBox1.Text.Trim() + " : Project : " + richTextBox9.Text + " : ASO : " + richTextBox10.Text + " : NR-34 : " + richTextBox11.Text + " : NR-10 : " + richTextBox12.Text + " : NR-33 : " + richTextBox13.Text + " : NR-35 : " + richTextBox14.Text + " : " + bb + " : " + comuser.Text + " :" + richTextBox17.Text + " :" + " :" + local22 + " :" + richTextBox6.Text + " :" + richTextBox7.Text + " :" + path3;
+                                    string filePath = @"C:\compartilhamento\data_txt\data2.txt";
+                                    string[] lines = File.ReadAllLines(filePath);
+
+                                    for (int i = 0; i < lines.Length; i++)
+                                    {
+                                        if (lines[i].Contains(richTextBox4.Text.Trim()))
+                                        {
+                                            ver = 1;
+                                            lines[i] = teste2.Trim();
+                                            /// MessageBox.Show("Achei: " + richTextBox4.Text.Trim());
+                                        }
+
+                                    }
+                                    //and save it:
+
+                                    File.WriteAllLines(filePath, lines);
+                                    ver = 0;
+
+                                }
+                                //////////////////
+
+
+                                //  pictureBox1.Visible = false;
+                                //  panel4.Visible = false;
+                                //  panel4.Size = new Size(360, 355);
+                                // panel4.Location = new System.Drawing.Point(95, 150);
+                                // pictureBox1.Size = new Size(330, 320);
+                                // pictureBox1.Location = new System.Drawing.Point(15, 18);
+
+                                // panel4.Visible = true;
+                                //  pictureBox1.Visible = true;
+                                // panel10.Visible = false;
+
+
+
+                                // button8.Visible = true;
+                                // button9.Visible = true;
+                                // button10.Visible = true;
+                                // pictureBox1.BackgroundImage = Properties.Resources.barcode1;
+                                int rich1 = Int16.Parse(richTextBox16.Text.Trim()) - 1;
+                                string secondLine2 = File.ReadLines(@"C:\compartilhamento\data_txt\data2.txt").ElementAtOrDefault(rich1);
+                                string sec = secondLine2.Split(':')[26].Trim();
+                                string pass11 = secondLine2.Split(':')[5].Trim();
+                                string pass12 = secondLine2.Split(':')[9].Trim();
+                                string pass13 = secondLine2.Split(':')[3].Trim();
+                                string pass14 = secondLine2.Split(':')[11].Trim();
+                                string pass15 = secondLine2.Split(':')[17].Trim();
+                                string pass16 = secondLine2.Split(':')[19].Trim(); // NR34
+                                string pass17 = secondLine2.Split(':')[21].Trim(); // VA1
+                                string pass18 = secondLine2.Split(':')[23].Trim(); // V2                                                                                                                                                                   //17
+                                string pass19 = secondLine2.Split(':')[25].Trim();// V BOOSTER
+
+                                //   string pass19 = secondLine2.Split(':')[25].Trim();// V BOOSTER
+
+
+
+
+
+                                //  0   1      2                       3        4              5         6              7  8           9         10                                  11      12             13        14      15    16           17     18           19          20            21          22           23               24            25 26     27   
+                                //Number : 1 : Name : CRISTIANO CALHEIROS 3 : Compay : GOOGLEMARINE :Funcition:  ENGENHEIRO  :Id: 1110988400 : E-mail : cristiano.engenharia.ac@gmail.com : Vessel : Googlemarine : Project : 2001 : ASO : 02/02/2024 : NR-34 : 02/02/2025 : Vaccine-1 : 02/02/2026 : Vaccine-2 : 02/02/2027 : Booster vaccine : 02/02/2028 :  : COMUM :
+                                if (pass11.Trim() != richTextBox1.Text.Trim())  //COMPANY
+                                {
+                                    company_loc = true;
+                                }
+
+
+
+                                if (pass12.Trim() != richTextBox4.Text.Trim())  // IDENTIDADE
+                                {
+                                    company_loc = true;
+                                }
+
+                                if (pass13.Trim() != richTextBox2.Text.Trim()) // NOME
+                                {
+                                    company_loc = true;
+                                }
+
+                                if (pass14.Trim() != richTextBox8.Text.Trim()) // email
+                                {
+                                    company_loc = true;
+                                }
+                                if (pass15.Trim() != maskedTextBox1.Text.Trim()) // aso
+                                {
+                                    company_loc = true;
+                                }
+                                if (pass16.Trim() != maskedTextBox2.Text.Trim()) // nr34
+                                {
+                                    company_loc = true;
+                                }
+                                if (pass17.Trim() != maskedTextBox3.Text.Trim()) // vacina 1
+                                {
+                                    company_loc = true;
+                                }
+                                if (pass18.Trim() != maskedTextBox4.Text.Trim()) // vacina 2
+                                {
+                                    company_loc = true;
+                                }
+                                if (pass19.Trim() != maskedTextBox5.Text.Trim()) // vacina reforço
+                                {
+                                    company_loc = true;
+                                }
+
+
+                                if (pass11.Trim() == richTextBox1.Text.Trim() && pass12.Trim() == richTextBox4.Text.Trim() && pass13.Trim() == richTextBox2.Text.Trim())
+                                {
+                                    if (pass14.Trim() == richTextBox8.Text.Trim() && pass15.Trim() == maskedTextBox1.Text.Trim() && pass16.Trim() == maskedTextBox2.Text.Trim())
+                                    {
+                                        if (pass17.Trim() == maskedTextBox3.Text.Trim() && pass18.Trim() == maskedTextBox4.Text.Trim() && pass19.Trim() == maskedTextBox5.Text.Trim())
+                                        {
+                                            company_loc = false; // 
+                                        }
                                     }
                                 }
-                            }
 
 
 
-                            if (sec == "Bloqueado")
-                            {
-                                bb = "Bloqueado";
-                                label37.Text = secondLine2.Split(':')[28];
-                                // company_loc = true;
-                            }
-                            else
-                            {
-                                bb = "";
-                                label37.Text = "";
-                                // company_loc = false;
-                            }
+                                if (sec == "Bloqueado")
+                                {
+                                    bb = "Bloqueado";
+                                    label37.Text = secondLine2.Split(':')[28];
+                                    // company_loc = true;
+                                }
+                                else
+                                {
+                                    bb = "";
+                                    label37.Text = "";
+                                    // company_loc = false;
+                                }
 
 
 
@@ -4064,7 +4243,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
 
                 }
             }
-            
+
         }
         public async Task TestaPing(string url)
         {
@@ -4195,7 +4374,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
 
 
                 label27.Text = Linhas.ToString();
-             //   label67.Text = label27.Text;
+                //   label67.Text = label27.Text;
                 if (rich5 == comboBox1.Text.Trim())
                 {
 
@@ -4208,38 +4387,34 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
             }
 
         }
-      //  int comp = 1;
+
+        //  int comp = 1;
         private void timer9_Tick(object sender, EventArgs e)
         {
-           //myThread.Start();
-           // myThread.Abort();
-        //    panel12.BackColor = Color.Black;
-
-            try
+            if (!isSynchronizing)
             {
-               if (compr == 0)
+                try
                 {
-                    // atualiza_compartilhamento();
-                    checa_host();
-                    //  timer9.Stop();
-                    // ler_linha3();
-                  compr = 1;
-
+                    if (checa_host_ == true)
+                    {
+                        checa_host();
+                    }
+                }
+                catch
+                {
+                    // Consider logging errors here for troubleshooting
                 }
             }
-            catch
-            {
-
-            }
         }
+
         private void userloc()
         {
             panel5.Visible = true;
             button1.Enabled = true;
             button28.Enabled = true;
-           // button2.Enabled = true;
-          //  button17.Enabled = true;
-          //  button29.Enabled = true;
+            // button2.Enabled = true;
+            //  button17.Enabled = true;
+            //  button29.Enabled = true;
             button3.Enabled = true;
             button4.Enabled = true;
             button19.Enabled = true;
@@ -4248,9 +4423,9 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
         {
             button1.Enabled = false;
             button28.Enabled = false;
-           // button2.Enabled = false;
-          //  button17.Enabled = false;
-          //  button29.Enabled = false;
+            // button2.Enabled = false;
+            //  button17.Enabled = false;
+            //  button29.Enabled = false;
             button3.Enabled = false;
             button4.Enabled = false;
             button19.Enabled = false;
@@ -4264,10 +4439,10 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
             button6.Visible = false;
             button4.Visible = false;
             button3.Visible = false;
-           // button29.Visible = false;
+            // button29.Visible = false;
             button28.Visible = false;
-           // button17.Visible = false;
-          //  button2.Visible = false;
+            // button17.Visible = false;
+            //  button2.Visible = false;
             button1.Visible = false;
             button19.Visible = false;
             monitor();
@@ -4282,13 +4457,13 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
             //button29.Visible = true;
             button28.Visible = true;
             //button17.Visible = true;
-           // button2.Visible = true;
+            // button2.Visible = true;
             button1.Visible = true;
             button19.Visible = true;
         }
         private void button35_Click(object sender, EventArgs e)
         {
-          
+
             verz = true;
             String pass0 = passall.Split(',')[0];
             String pass1 = passall.Split(',')[1];
@@ -4512,7 +4687,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                 dataGridView1.Visible = false;
                 button2.Enabled = false;
                 button17.Enabled = false;
-              //  button29.Enabled = true;
+                //  button29.Enabled = true;
                 btloc.Visible = false;
                 button7.Visible = false;
                 // CHLocked.Visible = false;
@@ -4676,27 +4851,27 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                     Console.WriteLine($"A palavra '{palavraProcurada}' foi encontrada no texto.");
                 }
                 var parameterDate_ASo = DateTime.ParseExact(maskedTextBox1.Text.Trim(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                    //var parameterDate_initial = DateTime.ParseExact(richTextBox6.Text.Trim(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                    /// var parameterDate_final = DateTime.ParseExact(richTextBox7.Text.Trim(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                    var todaysDate = DateTime.Today;
+                //var parameterDate_initial = DateTime.ParseExact(richTextBox6.Text.Trim(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                /// var parameterDate_final = DateTime.ParseExact(richTextBox7.Text.Trim(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                var todaysDate = DateTime.Today;
 
-                    if (todaysDate > parameterDate_ASo)
-                    {
+                if (todaysDate > parameterDate_ASo)
+                {
 
 
-                        beep();
-                        beep();
-                        beep();
-                        beep();
-                        aso_1 = 1;
-                        MessageBox.Show("Aso vencido, Favor verificar");
-                    }
-                    else
-                    {
+                    beep();
+                    beep();
+                    beep();
+                    beep();
+                    aso_1 = 1;
+                    MessageBox.Show("Aso vencido, Favor verificar");
+                }
+                else
+                {
 
-                        aso_1 = 0;
+                    aso_1 = 0;
 
-                    }
+                }
 
 
             }
@@ -4710,6 +4885,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
         String local22 = "";
         private void read_write()
         {
+            checa_host_ = false;
             String data_new;
             String data2_new;
             if (dateTimePicker1.Visible == true)
@@ -4781,8 +4957,40 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
 
                     }
 
+                    //Number : 1 : Name : Gustavo de Vasconcelos Magalhães : Compay : DOF :Funcition:  Gerente de Projeto  :Id: 120159298 : E-mail : N/A : Vessel : SKANDI AMAZONAS : Project : Estadia : ASO : 01/07/2024 : NR-34 : 01/06/2024 : NR-10 : 01/06/2024 : NR-33 : 01/06/2024 : NR-35 : 01/06/2024 :  : JOÃO : : : :17/08/2023 :17/08/2023 :.
                     //  richTextBox16.Text = label3.Text.Trim();
                     string teste2 = "Number : " + richTextBox16.Text.Trim() + " : Name : " + richTextBox2.Text + " : Compay : " + richTextBox1.Text + " :Funcition:  " + richTextBox3.Text + "  :Id: " + richTextBox4.Text + " : E-mail : " + richTextBox8.Text + " : Vessel : " + comboBox1.Text.Trim() + " : Project : " + richTextBox9.Text + " : ASO : " + richTextBox10.Text + " : NR-34 : " + richTextBox11.Text + " : NR-10 : " + richTextBox12.Text + " : NR-33 : " + richTextBox13.Text + " : NR-35 : " + richTextBox14.Text + " : " + bb + " : " + comuser.Text + " :" + richTextBox17.Text + " :" + " :" + local22 + " :" + data_new + " :" + data2_new + " :" + path3;
+
+                    Cadastro cadastro = new Cadastro(
+                        number: richTextBox16.Text.Trim(),
+                        name: richTextBox2.Text,
+                        company: richTextBox1.Text,
+                        function: richTextBox3.Text,
+                        identidade: richTextBox4.Text,
+                        email: richTextBox8.Text,
+                        vessel: comboBox1.Text,
+                        project: richTextBox9.Text,
+                        aso: richTextBox10.Text,
+                        nr_34: richTextBox11.Text,
+                        nr_10: richTextBox12.Text,
+                        nr_33: richTextBox13.Text,
+                        nr_35: richTextBox14.Text,
+                        estado: bb,
+                        usuario: comuser.Text,
+                        motivo: richTextBox17.Text,
+                        local: local22,
+                        data: data_new,
+                        data2: data2_new,
+                        document: path3
+                        );
+
+                    //save cadstro at  using (var db = new LiteDatabase(@"C:\compartilhamento\dados\banco.db"))
+                    if (!Directory.Exists(@"C:\compartilhamento\dados"))
+                    {
+                        Directory.CreateDirectory(@"C:\compartilhamento\dados");
+                    }
+
+                    AddOrUpdateCadastroData(cadastro);
 
                     writer.WriteLine(teste2);
                     writer.Close();
@@ -4824,6 +5032,39 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                     string teste2 = "Number : " + richTextBox16.Text.Trim() + " : Name : " + richTextBox2.Text + " : Compay : " + richTextBox1.Text + " :Funcition:  " + richTextBox3.Text + "  :Id: " + richTextBox4.Text + " : E-mail : " + richTextBox8.Text + " : Vessel : " + comboBox1.Text.Trim() + " : Project : " + richTextBox9.Text + " : ASO : " + richTextBox10.Text + " : NR-34 : " + richTextBox11.Text + " : NR-10 : " + richTextBox12.Text + " : NR-33 : " + richTextBox13.Text + " : NR-35 : " + richTextBox14.Text + " : " + bb + " : " + comuser.Text + " :" + richTextBox17.Text + " :" + " :" + local22 + " :" + data_new + " :" + data2_new + " :" + path3;
                     string filePath = @"C:\compartilhamento\data_txt\data2.txt";
                     string[] lines = File.ReadAllLines(filePath);
+                    //create new Cadastro object and save it into a new SQLite table called Cadastro
+                    Cadastro cadastro = new Cadastro(
+                        number: richTextBox16.Text.Trim(),
+                        name: richTextBox2.Text,
+                        company: richTextBox1.Text,
+                        function: richTextBox3.Text,
+                        identidade: richTextBox4.Text,
+                        email: richTextBox8.Text,
+                        vessel: comboBox1.Text,
+                        project: richTextBox9.Text,
+                        aso: richTextBox10.Text,
+                        nr_34: richTextBox11.Text,
+                        nr_10: richTextBox12.Text,
+                        nr_33: richTextBox13.Text,
+                        nr_35: richTextBox14.Text,
+                        estado: bb,
+                        usuario: comuser.Text,
+                        motivo: richTextBox17.Text,
+                        local: local22,
+                        data: data_new,
+                        data2: data2_new,
+                        document: path3
+                        );
+
+                    //save cadstro at  using (var db = new LiteDatabase(@"C:\compartilhamento\dados\banco.db"))
+                    if (!Directory.Exists(@"C:\compartilhamento\dados"))
+                    {
+                        Directory.CreateDirectory(@"C:\compartilhamento\dados");
+                    }
+
+                    AddOrUpdateCadastroData(cadastro);
+
+
 
                     for (int i = 0; i < lines.Length; i++)
                     {
@@ -4844,7 +5085,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
             }
 
 
-
+            checa_host_ = true;
 
         }
         public Bitmap GerarQRCode(int width, int height, string text)
@@ -4877,7 +5118,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
             using (StreamReader reader = new StreamReader(txtFilePath))
             {
                 string headerLine = reader.ReadLine();
-                string[] headerParts = { "NUMBER", "NAME", "COMPANY FUNCTION ", "FUNCTION", "ID", "EMAIL", "VESSEL", "CHECK-IN VALIDATION", "CHECK-OUT VALIDATION", "CHECK-IN  DATA", "CHECK-IN  HORA", "CHECK-OUT DATA", "CHECK-OUT HORA", "PROJECT", "ASO" , "NR-34", "NR-10", "NR-33", "NR-35", "LOCAL", "LEVEL", "ESTADO", "MOTIVO", "USUARIO" };//headerLine.Split(':');
+                string[] headerParts = { "NUMBER", "NAME", "COMPANY FUNCTION ", "FUNCTION", "ID", "EMAIL", "VESSEL", "CHECK-IN VALIDATION", "CHECK-OUT VALIDATION", "CHECK-IN  DATA", "CHECK-IN  HORA", "CHECK-OUT DATA", "CHECK-OUT HORA", "PROJECT", "ASO", "NR-34", "NR-10", "NR-33", "NR-35", "LOCAL", "LEVEL", "ESTADO", "MOTIVO", "USUARIO" };//headerLine.Split(':');
 
                 IRow headerRow = sheet.CreateRow(0);
                 for (int colIndex = 0; colIndex < headerParts.Length; colIndex++)
@@ -4937,6 +5178,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
             {
                 timer10.Enabled = false;
                 timer12.Enabled = false;
+                /*
                 ProcessStartInfo startInfo = new ProcessStartInfo("cmd", "/K netsh interface set interface \"Ethernet\" DISABLED");
                 startInfo.RedirectStandardOutput = true;
                 startInfo.UseShellExecute = false;
@@ -4944,6 +5186,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                 startInfo.CreateNoWindow = true;
                 startInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 Process.Start(startInfo);
+                */
 
                 check_id_onboard();
 
@@ -4956,7 +5199,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                     }
 
 
-                   // alterado();
+                    // alterado();
                     System.Threading.Thread.Sleep(2000);
                     compare_id();
                     check_if_exist_id();
@@ -5007,12 +5250,12 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
 
                                 // if (aso_1 == 0)
                                 //  {
-                              //  richTextBox1.Text = richTextBox1.Text.Trim()+" VISITANTE ";
+                                //  richTextBox1.Text = richTextBox1.Text.Trim()+" VISITANTE ";
 
-                                    if (richTextBox8.Text == "")
-                                    {
-                                        richTextBox8.Text = "N/A";
-                                    }
+                                if (richTextBox8.Text == "")
+                                {
+                                    richTextBox8.Text = "N/A";
+                                }
                                 if (richTextBox10.Text == "")
                                 {
                                     richTextBox10.Text = "N/A";
@@ -5021,10 +5264,10 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                                 {
                                     richTextBox11.Text = "N/A";
                                 }
-                                    if (richTextBox12.Text == "")
-                                    {
-                                        richTextBox12.Text = "N/A";
-                                    }
+                                if (richTextBox12.Text == "")
+                                {
+                                    richTextBox12.Text = "N/A";
+                                }
                                 if (richTextBox13.Text == "")
                                 {
                                     richTextBox13.Text = "N/A";
@@ -5034,44 +5277,44 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                                     richTextBox14.Text = "N/A";
                                 }
 
-                                    maskedTextBox1.Visible = false;
-                                    maskedTextBox2.Visible = false;
-                                    maskedTextBox3.Visible = false;
-                                    maskedTextBox4.Visible = false;
-                                    maskedTextBox5.Visible = false;
+                                maskedTextBox1.Visible = false;
+                                maskedTextBox2.Visible = false;
+                                maskedTextBox3.Visible = false;
+                                maskedTextBox4.Visible = false;
+                                maskedTextBox5.Visible = false;
 
 
 
 
-                                    read_write();
-                                    confere = 1;
-                                    lb4.Visible = true;
-                                    label5.Visible = true;
-                                    panel10.Visible = true;
-                                    label5.Text = richTextBox2.Text;
+                                read_write();
+                                confere = 1;
+                                lb4.Visible = true;
+                                label5.Visible = true;
+                                panel10.Visible = true;
+                                label5.Text = richTextBox2.Text;
 
 
 
 
-                                    qr_generate = "Printed Qrcode";
+                                qr_generate = "Printed Qrcode";
 
-                                    //
-                                   // CarregarPlanilha2();
+                                //
+                                // CarregarPlanilha2();
                                 carrega_planilha2_txt();
                                 //  create_qrcode();
                                 // create_qrcode_new();
                                 create_qrcode_invited_new();
-                                    print_qrcode();
+                                print_qrcode();
 
-                                    ProcessStartInfo startInfo2 = new ProcessStartInfo("cmd", "/K netsh interface set interface \"Ethernet\" ENABLED");
-                                    startInfo2.RedirectStandardOutput = true;
-                                    startInfo2.UseShellExecute = false;
-                                    // Do not create the black window.
-                                    startInfo2.CreateNoWindow = true;
-                                    startInfo2.WindowStyle = ProcessWindowStyle.Hidden;
-                                    Process.Start(startInfo2);
+                                ProcessStartInfo startInfo2 = new ProcessStartInfo("cmd", "/K netsh interface set interface \"Ethernet\" ENABLED");
+                                startInfo2.RedirectStandardOutput = true;
+                                startInfo2.UseShellExecute = false;
+                                // Do not create the black window.
+                                startInfo2.CreateNoWindow = true;
+                                startInfo2.WindowStyle = ProcessWindowStyle.Hidden;
+                                Process.Start(startInfo2);
 
-                               /// }
+                                /// }
 
 
 
@@ -5185,12 +5428,12 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
 
 
 
-         //   richTextBox1.Text = " VISITANTE  " + richTextBox1.Text;
+            //   richTextBox1.Text = " VISITANTE  " + richTextBox1.Text;
             data2 = number + " " + richTextBox16.Text + "\r\n" + nome + " " + richTextBox2.Text + "\r\n" + emp + " " + richTextBox1.Text + " \r\n" + function + " " + richTextBox3.Text + "\r\n" + id + " " +
             this.richTextBox4.Text + "\r\n" + email + " " + this.richTextBox8.Text + "\r\n" + vessel + " " + this.comboBox1.Text.Trim() + "\r\n" + this.richTextBox9.Text + "\r\n" + this.richTextBox10.Text + "\r\n" + this.richTextBox11.Text + "\r\n" + this.richTextBox12.Text + "\r\n" + this.richTextBox13.Text + "\r\n" + this.richTextBox14.Text + "\r\n" +
             initial + " " + data_new + "\r\n" +
             final + " " + data2_new + "\r\n" + path3 + "\r\n" + local1val + "\r\n" + local2val + "\r\n" + local3val + "\r\n" + local4val + "\r\n" + levelyellow + "\r\n" + levelgreen + "\r\n" + levelred;
-
+            // MessageBox.Show(data2);
             Criptografia criptografia = new Criptografia(CryptProvider.RC2);
             criptografia.Key = "Etec2017"; // chave
             data2 = criptografia.Encrypt(data2.ToString());
@@ -5228,7 +5471,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
             panel4.Visible = true;
 
             label5.Text = richTextBox2.Text;
-            label28.Text = "Vessel: "+comboBox1.Text;
+            label28.Text = "Vessel: " + comboBox1.Text;
             label30.Text = richTextBox9.Text;
             lb4.Text = richTextBox16.Text; ;
             label31.Text = "De: " + data_new;
@@ -5262,6 +5505,19 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
             initial + " " + data_new + "\r\n" +
             final + " " + data2_new + "\r\n" + path3 + "\r\n" + local1val + "\r\n" + local2val + "\r\n" + local3val + "\r\n" + local4val + "\r\n" + levelyellow + "\r\n" + levelgreen + "\r\n" + levelred;
 
+
+            QRCodeEncryptor = new QRCodeEncryptor();
+            string originalText = data2;
+
+            // Criptografa o texto
+            string encryptedText = QRCodeEncryptor.EncryptQRCode(originalText);
+            // Console.WriteLine("Texto criptografado: " + encryptedText);
+
+            // Descriptografa o texto
+            string decryptedText = QRCodeEncryptor.DecryptQRCode(encryptedText);
+            // Console.WriteLine("Texto descriptografado: " + decryptedText);
+
+
             Criptografia criptografia = new Criptografia(CryptProvider.RC2);
             criptografia.Key = "Etec2017"; // chave
             data2 = criptografia.Encrypt(data2.ToString());
@@ -5269,10 +5525,216 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
             pictureBox1.Image = bmp;
         }
         //bool a = false;
+        bool id_existe = false;
         private void button2_Click(object sender, EventArgs e)
         {
-           
-            rec = false;
+
+
+
+
+            checa_host_ = false;
+
+                Boolean tempo = false;
+                if (dateTimePicker1.Visible == true)
+                {
+                    if (dateTimePicker2.Value.Date >= dateTimePicker1.Value.Date)
+                    {
+                        tempo = true;
+                    }
+                    else
+                    {
+                        tempo = false;
+                        MessageBox.Show("A DATA FINAL ESTÁ MENOR QUE A DATA INICIAL, CORRIJA POR FAVOR!");
+
+                    }
+                }
+
+                if (dateTimePicker1.Visible == false)
+                {
+                    tempo = true;
+                }
+                if (tempo == true)
+                {
+                    timer10.Enabled = false;
+                    timer12.Enabled = false;
+
+                /*
+                    ProcessStartInfo startInfo = new ProcessStartInfo("cmd", "/K netsh interface set interface \"Ethernet\" DISABLED");
+                    startInfo.RedirectStandardOutput = true;
+                    startInfo.UseShellExecute = false;
+                    // Do not create the black window.
+                    startInfo.CreateNoWindow = true;
+                    startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                    Process.Start(startInfo);
+                */
+                    check_id_onboard();
+
+                    if (id_onboard == false)
+                    {
+                        if (dateTimePicker1.Visible == true)
+                        {
+                            richTextBox6.Text = dateTimePicker1.Value.ToString("dd/MM/yyyy").ToString().Trim();
+                            richTextBox7.Text = dateTimePicker2.Value.ToString("dd/MM/yyyy").ToString().Trim();
+                        }
+
+
+                        alterado();
+                        System.Threading.Thread.Sleep(2000);
+                        compare_id();
+                        check_if_exist_id();
+
+                        if (id_exist == true)
+                        {
+
+                            //  MessageBox.Show("id existe");
+                            richTextBox10.Text = maskedTextBox1.Text;
+                            richTextBox11.Text = maskedTextBox2.Text;
+                            richTextBox12.Text = maskedTextBox3.Text;
+                            richTextBox13.Text = maskedTextBox4.Text;
+                            richTextBox14.Text = maskedTextBox5.Text;
+                            textBox13.Text = richTextBox1.Text;
+                            textBox7.Focus();
+                            textBox7.Text = "";
+
+                            if (band == 0)
+                            {
+                                button2.Text = Label_Create_QRcode[0];
+                            }
+                            else
+                            {
+                                button2.Text = Label_Create_QRcode[1];
+                            }
+
+
+
+
+
+                            // var parameterDate2_initial = DateTime.ParseExact(dateTimePicker1.Value.Date.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                            // var parameterDate2_final = DateTime.ParseExact(dateTimePicker2.Value.Date.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+                            if (resultado == 0)
+                            {
+                                if (textBox7.SelectionLength >= 0)
+                                {
+                                    // textBox7.Focus();
+                                    // textBox7.Text = "";
+                                }
+                                // dataGridView1.Visible = false;
+                                if (richTextBox1.Text != "" && richTextBox2.Text != "" && richTextBox3.Text != "" && richTextBox4.Text != "" && richTextBox6.Text != "" && richTextBox7.Text != "" && comboBox1.Text != "" && richTextBox8.Text != "" && checado == 1 && maskedTextBox1.Text != "  /  /"
+                                    && maskedTextBox2.Text != "  /  /" && maskedTextBox3.Text != "  /  /" && maskedTextBox4.Text != "  /  /" && maskedTextBox5.Text != "  /  /" && richTextBox6.Text != " " && richTextBox7.Text != " ")  //  /  /
+                                {
+
+
+
+                                    compare_aso();
+
+                                    if (aso_1 == 0)
+                                    {
+
+                                        if (richTextBox8.Text == "")
+                                        {
+                                            richTextBox8.Text = "N/A";
+                                        }
+
+                                        maskedTextBox1.Visible = false;
+                                        maskedTextBox2.Visible = false;
+                                        maskedTextBox3.Visible = false;
+                                        maskedTextBox4.Visible = false;
+                                        maskedTextBox5.Visible = false;
+
+
+
+
+                                        read_write();
+                                        confere = 1;
+                                        lb4.Visible = true;
+                                        label5.Visible = true;
+                                        panel10.Visible = true;
+                                        label5.Text = richTextBox2.Text;
+
+
+
+
+                                        qr_generate = "Printed Qrcode";
+
+                                        //
+                                        //  CarregarPlanilha2();
+                                        carrega_planilha2_txt();
+                                        //  create_qrcode();
+                                        create_qrcode_new();
+                                        print_qrcode();
+
+                                        ProcessStartInfo startInfo2 = new ProcessStartInfo("cmd", "/K netsh interface set interface \"Ethernet\" ENABLED");
+                                        startInfo2.RedirectStandardOutput = true;
+                                        startInfo2.UseShellExecute = false;
+                                        // Do not create the black window.
+                                        startInfo2.CreateNoWindow = true;
+                                        startInfo2.WindowStyle = ProcessWindowStyle.Hidden;
+                                        Process.Start(startInfo2);
+
+
+
+                                    }
+
+
+
+
+
+                                    //
+                                    //string teste = "Name : " + richTextBox2.Text + " : Compay : " + richTextBox1.Text + " :Funcition: " + richTextBox3.Text + "  :Id: " + richTextBox4.Text + " : E-mail : " + richTextBox8.Text + " : Vessel :" + richTextBox5.Text + " : Project : " + richTextBox9.Text + ": ASO : " + richTextBox10.Text + " : NR-34 : " + richTextBox11.Text + " : Vaccine-1 : " + richTextBox12.Text + " : Vaccine-2 : " + richTextBox13.Text + " : Booster vaccine : " + richTextBox14.Text;
+                                    //  atualiza_compartilhamento();
+
+                                    // 
+
+                                    // else
+                                    //  {
+                                    //  MessageBox.Show(id_check[band]);
+                                    //  }
+                                    checado = 0;
+
+                                }
+                                else
+                                {
+                                    if (band == 0)
+                                    {
+                                        MessageBox.Show("Favor preencher todos os campos");
+                                    }
+
+                                    if (band == 1)
+                                    {
+                                        MessageBox.Show("Please complete all informations places");
+                                    }
+                                }
+
+                            }
+
+
+                            if (resultado == 1)
+                            {
+                                MessageBox.Show("ID duplicated");
+                            }
+                            textBox7.Focus();
+                            textBox7.Text = " ";
+                        }
+                        ok_but2 = false;
+
+                    }
+                    else
+                    {
+                        MessageBox.Show("ESTA PESSOA ESTÁ A BORDO! SÓ É PERMITIDO IMPRIMIR OU CADASTRAR SE A PESSOA ESTIVER FORA DA EMBARCAÇÃO");
+                        id_onboard = false;
+                    }
+                }
+                rec = true;
+                timer10.Enabled = true;
+                timer12.Enabled = true;
+            checa_host_ = true;
+
+        }
+        private void imprime_novo()
+        {
+
+
             Boolean tempo = false;
             if (dateTimePicker1.Visible == true)
             {
@@ -5296,6 +5758,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
             {
                 timer10.Enabled = false;
                 timer12.Enabled = false;
+                /*
                 ProcessStartInfo startInfo = new ProcessStartInfo("cmd", "/K netsh interface set interface \"Ethernet\" DISABLED");
                 startInfo.RedirectStandardOutput = true;
                 startInfo.UseShellExecute = false;
@@ -5303,6 +5766,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                 startInfo.CreateNoWindow = true;
                 startInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 Process.Start(startInfo);
+                */
 
                 check_id_onboard();
 
@@ -5408,7 +5872,9 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                                     startInfo2.CreateNoWindow = true;
                                     startInfo2.WindowStyle = ProcessWindowStyle.Hidden;
                                     Process.Start(startInfo2);
-                                   
+
+
+
                                 }
 
 
@@ -5466,84 +5932,102 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
         }
         private void compare_id()
         {
-            String l = "";
-            bool ESIM = false;
-            bool dois = false;
-            bool tres = false;
-            string nume = "";
-            string[] lines = File.ReadAllLines(@"C:\compartilhamento\data_txt\data2.txt");
-            id_1 = 0;
-            for (int i = 0; i < lines.Length; i++)
+            try
             {
-
-                if (lines[i].Split(':')[9].Trim() == richTextBox4.Text.Trim())
+                String l = "";
+                bool ESIM = false;
+                bool dois = false;
+                bool tres = false;
+                string nume = "";
+                string[] lines = File.ReadAllLines(@"C:\compartilhamento\data_txt\data2.txt");
+                id_1 = 0;
+                for (int i = 0; i < lines.Length; i++)
                 {
 
-                    l = lines[i].Split(':')[9].Trim();
-                    if (lines[i].Split(':')[1].Trim() != richTextBox16.Text.Trim())
+                    if (lines[i].Split(':')[9].Trim() == richTextBox4.Text.Trim())
                     {
-                        MessageBox.Show("O NÚMERO DA IDENTIDADE  * " + lines[i].Split(':')[9].Trim() + " *  JÁ ESTÁ CADASTRADO NO ACESSO DE NÚMERO " + lines[i].Split(':')[1].Trim());
+
+                        l = lines[i].Split(':')[9].Trim();
+                        if (lines[i].Split(':')[1].Trim() != richTextBox16.Text.Trim())
+                        {
+                            MessageBox.Show("O NÚMERO DA IDENTIDADE  * " + lines[i].Split(':')[9].Trim() + " *  JÁ ESTÁ CADASTRADO NO ACESSO DE NÚMERO " + lines[i].Split(':')[1].Trim());
+                        }
+                        ESIM = true;
+                        richTextBox4.Text = lines[int.Parse(richTextBox16.Text) - 1].Split(':')[9].Trim();
+                        string text4 = "Number : " + richTextBox16.Text + " : Name : " + richTextBox2.Text + " : Compay : " + richTextBox1.Text + " :Funcition:  " + richTextBox3.Text + "  :Id: " + richTextBox4.Text + " : E-mail : " + richTextBox8.Text + " : Vessel : " + comboBox1.Text.Trim() + " : Project : " + richTextBox9.Text + " : ASO : " + maskedTextBox1.Text + " : NR-34 : " + maskedTextBox2.Text + " : NR-10 : " + maskedTextBox3.Text + " : NR-33 : " + maskedTextBox4.Text + " : NR-35 : " + maskedTextBox5.Text + " : " + bb + " : " + comuser.Text + " :" + richTextBox17.Text + " :" + local22.Trim();
+
+                        string text = File.ReadAllText(@"C:\compartilhamento\data_txt\data2.txt");
+                        text = text.Replace(lines[Int16.Parse(richTextBox16.Text) - 1], text4);
+                        File.WriteAllText(@"C:\compartilhamento\data_txt\data2.txt", text);
+                        //  MessageBox.Show(" CADASTRO REALIZADO COM SUCESSO, A IDENTIDADE NÃO FOI ALTERADA POIS JÁ EXISTE UMA IDENTIDADE COM ESTA NÚMERO");
+                        break;
+
                     }
-                    ESIM = true;
-                    richTextBox4.Text = lines[int.Parse(richTextBox16.Text) - 1].Split(':')[9].Trim();
-                    string text4 = "Number : " + richTextBox16.Text + " : Name : " + richTextBox2.Text + " : Compay : " + richTextBox1.Text + " :Funcition:  " + richTextBox3.Text + "  :Id: " + richTextBox4.Text + " : E-mail : " + richTextBox8.Text + " : Vessel : " + comboBox1.Text.Trim() + " : Project : " + richTextBox9.Text + " : ASO : " + maskedTextBox1.Text + " : NR-34 : " + maskedTextBox2.Text + " : NR-10 : " + maskedTextBox3.Text + " : NR-33 : " + maskedTextBox4.Text + " : NR-35 : " + maskedTextBox5.Text + " : " + bb + " : " + comuser.Text + " :" + richTextBox17.Text + " :" + local22.Trim();
+                    else
+                    {
+                        ESIM = false;
 
-                    string text = File.ReadAllText(@"C:\compartilhamento\data_txt\data2.txt");
-                    text = text.Replace(lines[Int16.Parse(richTextBox16.Text) - 1], text4);
-                    File.WriteAllText(@"C:\compartilhamento\data_txt\data2.txt", text);
-                    //  MessageBox.Show(" CADASTRO REALIZADO COM SUCESSO, A IDENTIDADE NÃO FOI ALTERADA POIS JÁ EXISTE UMA IDENTIDADE COM ESTA NÚMERO");
-                    break;
+                    }
+
+
 
                 }
-                else
+
+                if (ESIM == false)
                 {
-                    ESIM = false;
+                    if (local1val == 1)
+                    {
+                        local22 = place1[band];
 
+                    }
+                    if (local2val == 1)
+                    {
+                        local22 = place2[band];
+
+                    }
+                    if (local4val == 1)
+                    {
+                        local22 = place4[band];
+
+                    }
+                    id_1 = 1;
+                    string[] lines2 = File.ReadAllLines(@"C:\compartilhamento\data_txt\data2.txt");
+                    if (richTextBox4.Text.Trim() != l)
+                    {
+
+                        //   int count = File.ReadAllLines(@"C:\compartilhamento\data_txt\data2.txt").Length;
+                        //   richTextBox16.Text = (Int32.Parse(label3.Text) + 1).ToString();
+
+                        string text4 = "Number : " + richTextBox16.Text.Trim() + " : Name : " + richTextBox2.Text + " : Compay : " + richTextBox1.Text + " :Funcition:  " + richTextBox3.Text + "  :Id: " + richTextBox4.Text.Trim() + " : E-mail : " + richTextBox8.Text + " : Vessel : " + comboBox1.Text.Trim() + " : Project : " + richTextBox9.Text + " : ASO : " + maskedTextBox1.Text + " : NR-34 : " + maskedTextBox2.Text + " : NR-10 : " + maskedTextBox3.Text + " : NR-33 : " + maskedTextBox4.Text + " : NR-35 : " + maskedTextBox5.Text + " : " + bb + " : " + comuser.Text + " :" + richTextBox17.Text + " :" + local22 + " :" + richTextBox15.Text;
+
+                        string text = File.ReadAllText(@"C:\compartilhamento\data_txt\data2.txt");
+                        // try
+                        // {
+                        text = text.Replace(lines2[Int16.Parse(richTextBox16.Text) - 1], text4);
+                        File.WriteAllText(@"C:\compartilhamento\data_txt\data2.txt", text);
+                        //  }
+                        //   catch
+                        //{
+                        //     MessageBox.Show("UTILIZE A OPÇÃP CADASTRAR ANTES DE IMPRIMIR");
+                        //  }
+                        //  MessageBox.Show("CADASTRO REALIZADO COM SUCESSO");
+                    }
+                    else
+                    {
+
+                    }
                 }
 
-
-
+                timer10.Enabled = true;
             }
-
-            if (ESIM == false)
+            catch
             {
-                if (local1val == 1)
-                {
-                    local22 = place1[band];
 
-                }
-                if (local2val == 1)
-                {
-                    local22 = place2[band];
-
-                }
-                if (local4val == 1)
-                {
-                    local22 = place4[band];
-
-                }
-                id_1 = 1;
-                string[] lines2 = File.ReadAllLines(@"C:\compartilhamento\data_txt\data2.txt");
-                if (richTextBox4.Text.Trim() != l)
-                {
-                    string text4 = "Number : " + richTextBox16.Text.Trim() + " : Name : " + richTextBox2.Text + " : Compay : " + richTextBox1.Text + " :Funcition:  " + richTextBox3.Text + "  :Id: " + richTextBox4.Text.Trim() + " : E-mail : " + richTextBox8.Text + " : Vessel : " + comboBox1.Text.Trim() + " : Project : " + richTextBox9.Text + " : ASO : " + maskedTextBox1.Text + " : NR-34 : " + maskedTextBox2.Text + " : NR-10 : " + maskedTextBox3.Text + " : NR-33 : " + maskedTextBox4.Text + " : NR-35 : " + maskedTextBox5.Text + " : " + bb + " : " + comuser.Text + " :" + richTextBox17.Text + " :" + local22 + " :" + richTextBox15.Text + "\r\n";
-
-                    string text = File.ReadAllText(@"C:\compartilhamento\data_txt\data2.txt");
-                    text = text.Replace(lines2[Int16.Parse(richTextBox16.Text) - 1], text4);
-                    File.WriteAllText(@"C:\compartilhamento\data_txt\data2.txt", text);
-                    //  MessageBox.Show("CADASTRO REALIZADO COM SUCESSO");
-                }
-                else
-                {
-
-                }
             }
-
-            timer10.Enabled = true;
         }
         private void button29_Click(object sender, EventArgs e)
         {
-            
+            checa_host_ = false;
             rec = false;
             Boolean tempo2 = false;
             if (dateTimePicker1.Visible == true)
@@ -5568,7 +6052,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
             {
                 timer10.Enabled = false;
                 timer12.Enabled = false;
-
+                /*
                 ProcessStartInfo startInfo = new ProcessStartInfo("cmd", "/K netsh interface set interface \"Ethernet\" DISABLED");
                 startInfo.RedirectStandardOutput = true;
                 startInfo.UseShellExecute = false;
@@ -5576,6 +6060,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                 startInfo.CreateNoWindow = true;
                 startInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 Process.Start(startInfo);
+                */
 
                 string[] lines = File.ReadAllLines(@"C:\compartilhamento\data_txt\data2.txt");
                 bool id_ok = false;
@@ -5763,6 +6248,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
       
             timer10.Enabled = true;
             timer12.Enabled = true;
+            checa_host_ = true;
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -5882,6 +6368,304 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
             CloseExcel();
             this.Close();
         }
+
+
+
+        private void check_if_exist_number2()
+        {
+
+            // richTextBox17.Text = "";
+            //    label37.Text = "Bloquear";
+            int rich1 = Int16.Parse(richTextBox18.Text.Trim()) - 1;
+            string secondLine2 = File.ReadLines(@"C:\compartilhamento\data_txt\data2.txt").ElementAtOrDefault(rich1);
+            //  MessageBox.Show(secondLine);
+            //string checline = secondLine.Trim();
+            if (secondLine2 != null)
+            {
+
+                //  Number: 1 : Name: Cristiano: Compay: Googlemarine: Funcition: Engenheiro: Id: 111098414 : E - mail : 1 : Vessel: Googlemarine: Project: 190603 : ASO: 22 / 02 / 2023 : NR - 34 : 22 / 02 / 2023 : Vaccine - 1 : 22 / 02 / 2023 : Vaccine - 2 : 22 / 02 / 2023 : Booster vaccine : 22 / 02 / 2023 : Bloqueado: GUSTAVO: Falta da quarta dose da vacina
+                int rich16 = Int16.Parse(richTextBox18.Text.Trim()) - 1;
+                int lab3 = Int16.Parse(label3.Text);
+                if (rich16 <= lab3)
+                {
+                    string secondLine = File.ReadLines(@"C:\compartilhamento\data_txt\data2.txt").ElementAtOrDefault(rich16);
+
+                    //  MessageBox.Show(secondLine);
+                    //string checline = secondLine.Trim();
+
+                    try
+                    {
+
+
+                        if (ok_but2 == false)
+                        {
+                            button2.Enabled = true;
+                            // richTextBox15.Text = "";
+                            /*
+                             richTextBox2.Text = secondLine.Split(':')[3].Trim();
+                             richTextBox3.Text = secondLine.Split(':')[7].Trim();
+                             richTextBox4.Text = secondLine.Split(':')[9].Trim();
+                             richTextBox1.Text = secondLine.Split(':')[5].Trim();
+                             richTextBox8.Text = secondLine.Split(':')[11].Trim();
+                            */
+
+
+                            //Number : 1 : Name : GUSTAVO MAGALHAES : Compay : DOF :Funcition:  GERENTE DE PROJETO  :Id: 8866640719 : E-mail : cristiano.engenharia.ac@gmail.com : Vessel : Skandi Rio : Project : Docagem : ASO : 07/01/2023 : NR-34 : 00/00/0000 : Vaccine-1 : 00/00/0000 : Vaccine-2 : 00/00/0000 : Booster vaccine : 00/00/0000 :  : COMUM : : :Convés :14/10/2022 :28/10/2022 :.
+
+                            richTextBox2.Text = secondLine.Split(':')[3].Trim();
+                            richTextBox3.Text = secondLine.Split(':')[7].Trim();
+                            richTextBox4.Text = secondLine.Split(':')[9].Trim();
+                            richTextBox1.Text = secondLine.Split(':')[5].Trim();
+
+                          //  comboBox1.Items.Clear();
+                          //  comboBox1.Items.Insert(0, secondLine.Split(':')[13].Trim());
+                          //  comboBox1.SelectedIndex = 0;
+
+                            richTextBox8.Text = secondLine.Split(':')[11].Trim();
+                            if (secondLine.Split(':')[11].Trim() == "")
+                            {
+                                richTextBox8.Text = "N/A";
+                            }
+
+                            maskedTextBox1.Visible = true;
+                            maskedTextBox2.Visible = true;
+                            maskedTextBox3.Visible = true;
+                            maskedTextBox4.Visible = true;
+                            maskedTextBox5.Visible = true;
+                            // maskedTextBox1.Text = "00/00/0000";
+                            // maskedTextBox2.Text = "00/00/0000";
+                            try
+                            {
+
+                                string ok = secondLine.Split(':')[17].Trim();
+                                //  MessageBox.Show(ok);
+                                string teste = DateTime.ParseExact(ok, "M/d/yyyy", CultureInfo.InvariantCulture).ToString("dd/MM/yyyy");
+
+                                maskedTextBox1.Text = teste;
+
+                                if (ok == "")
+                                {
+                                    maskedTextBox1.Text = "00/00/0000";
+                                }
+
+                                ok = secondLine.Split(':')[19].Trim();
+                                //  MessageBox.Show(ok);
+                                teste = DateTime.ParseExact(ok, "M/d/yyyy", CultureInfo.InvariantCulture).ToString("dd/MM/yyyy");
+                                // MessageBox.Show(teste);
+                                maskedTextBox2.Text = teste;
+
+                                if (ok == "")
+                                {
+                                    maskedTextBox2.Text = "00/00/0000";
+                                }
+
+
+                            }
+                            catch
+                            {
+
+                            }
+
+                            comboBox1.Items.Clear();
+                            comboBox1.Items.Insert(0, secondLine.Split(':')[13].Trim());
+                            comboBox1.SelectedIndex = 0;
+
+
+                            if (richTextBox3.Text != "")
+                            {
+                                //  comboBox1.Items.Clear();
+                                StreamReader sr = new StreamReader(@"C:\compartilhamento\vessels.txt");
+                                string x = sr.ReadToEnd();
+                                string[] y = x.Split('\n');
+                                foreach (string s in y)
+                                {
+                                    comboBox1.Items.Add(s);
+                                }
+                                sr.Close();
+                            }
+
+
+
+
+                            maskedTextBox1.Text = secondLine.Split(':')[17];
+                            maskedTextBox2.Text = secondLine.Split(':')[19];
+                            maskedTextBox3.Text = secondLine.Split(':')[21];
+                            maskedTextBox4.Text = secondLine.Split(':')[23];
+                            maskedTextBox5.Text = secondLine.Split(':')[25];
+
+                            if (secondLine.Split(':')[17].Trim() == "")
+                            {
+                                // maskedTextBox1.Text = "00/00/0000";
+                            }
+
+                            if (secondLine.Split(':')[19].Trim() == "")
+                            {
+                                maskedTextBox2.Text = "00/00/0000";
+                            }
+
+                            if (secondLine.Split(':')[21].Trim() == "")
+                            {
+                                maskedTextBox3.Text = "00/00/0000";
+                            }
+                            if (secondLine.Split(':')[23].Trim() == "")
+                            {
+                                maskedTextBox4.Text = "00/00/0000";
+                            }
+                            if (secondLine.Split(':')[25].Trim() == "")
+                            {
+                                maskedTextBox5.Text = "00/00/0000";
+                            }
+
+                            try
+                            {
+                                richTextBox15.Text = secondLine.Split(':')[33].Trim();
+                            }
+                            catch
+                            {
+                                // richTextBox15.Text = "";
+                            }
+                            richTextBox6.Visible = true;
+                            richTextBox7.Visible = true;
+                            dateTimePicker1.Visible = false;
+                            dateTimePicker2.Visible = false;
+
+                            try
+                            {
+
+                                richTextBox6.Text = secondLine.Split(':')[31];
+                                richTextBox7.Text = secondLine.Split(':')[32];
+                                String local222 = secondLine.Split(':')[30].Trim();
+
+                                label34.Text = local222;
+                                if (local222 == place1[band])
+                                {
+                                    local1.Checked = true;
+                                    local2.Checked = false;
+                                    local4.Checked = false;
+                                }
+                                if (local222 == place2[band])
+                                {
+                                    local1.Checked = false;
+                                    local2.Checked = true;
+                                    local4.Checked = false;
+                                }
+                                if (local222 == place4[band])
+                                {
+                                    local1.Checked = false;
+                                    local2.Checked = false;
+                                    local4.Checked = true;
+                                }
+                            }
+                            catch
+                            {
+
+                            }
+                        }
+
+                        string sec = secondLine.Split(':')[26].Trim();
+                        if (sec == "Bloqueado")
+                        {
+                            button2.Enabled = false;
+                            button17.Enabled = false;
+                            //  button5.Image = ((System.Drawing.Image)(resources.GetObject("_bButton.Image")));
+                            label37.Text = secondLine.Split(':')[28];
+                            textbloc = richTextBox17.Text.Trim();
+                            textbloc2 = richTextBox17.Text.Trim();
+                            //label37.Text = sec;
+                            btloc.Visible = true;
+                            button7.Visible = false;
+                            label37.Visible = true;
+                            btloc.Image = Properties.Resources.lock0;
+                            ////  btloc.Text = "Bloqueado";
+                            CHLocked.Text = "Desbloquear";
+                            //  textbloc = "";
+                            //  textbloc2 = "";
+                        }
+                        else
+                        {
+                            richTextBox17.Text = "";
+                            //  label37.Text = "Desbloqueado";
+                            CHLocked.Text = "Bloquear";
+                            btloc.Visible = false;
+                            button7.Visible = true;
+                            button2.Enabled = true;
+                            button17.Enabled = true;
+                            //  btloc.Text = " ";
+                            // btloc.Image = Properties.Resources.lock2;
+                        }
+                        String pass11 = secondLine.Split(':')[11];
+                    }
+
+                    catch
+                    {
+                        // MessageBox.Show("Não há cadastro com este Número");
+                    }
+                }
+
+
+
+
+                //  button2.Enabled = true;
+                //   button17.Enabled = true;
+                //  button29.Enabled = false;
+                // richTextBox4.ReadOnly = true;
+                // richTextBox4.
+                //   pictureBox1.Visible = false;
+                //   panel4.Visible = false;
+
+
+
+                //panel11.Size = new Size(360, 355);
+                //panel11.Location = new System.Drawing.Point(95, 150);
+                //pictureBox7.Size = new Size(330, 320);
+                // pictureBox7.Location = new System.Drawing.Point(15, 18);
+
+
+                try
+                {
+
+                    pictureBox7.LoadAsync(@"C:\compartilhamento\data_picture\" + richTextBox4.Text.ToString() + ".jpg");
+
+                }
+                catch
+                {
+                    pictureBox7.LoadAsync(@"C:\compartilhamento\data_picture\face.jpg");
+                }
+
+            }
+            else
+            {
+                id_exist = false;
+                richTextBox16.Text = "";
+                richTextBox2.Text = "";
+                richTextBox3.Text = "";
+                richTextBox4.Text = "";
+                richTextBox1.Text = "";
+                richTextBox8.Text = "";
+                richTextBox10.Text = "";
+                richTextBox11.Text = "";
+                richTextBox12.Text = "";
+                richTextBox13.Text = "";
+                richTextBox14.Text = "";
+                richTextBox15.Text = "";
+                maskedTextBox1.Text = "";
+                maskedTextBox2.Text = "";
+                maskedTextBox3.Text = "";
+                maskedTextBox4.Text = "";
+                maskedTextBox5.Text = "";
+                maskedTextBox1.Visible = false;
+                maskedTextBox2.Visible = false;
+                maskedTextBox3.Visible = false;
+                maskedTextBox4.Visible = false;
+                maskedTextBox5.Visible = false;
+                button2.Enabled = false;
+                button17.Enabled = false;
+
+
+                MessageBox.Show("NÃO EXISTE CADASTRO COM ESTE NÚMERO!");
+            }
+        }
+
         private void check_if_exist_number()
         {
 
@@ -6215,7 +6999,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                     button17.Enabled = false;
                    
                     //myThread.Abort();
-                    checa_host();
+                 //   checa_host();
                     // MessageBox.Show("button7_Click");
                     // atualiza_compartilhamento();
                 }
@@ -6252,8 +7036,8 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                         button17.Enabled = true;
                         richTextBox17.Text = "";
                         //myThread.Abort();
-                        checa_host();
-                        MessageBox.Show("btloc_Click");
+                     //   checa_host();
+                   //    MessageBox.Show("btloc_Click");
                         // atualiza_compartilhamento();
                     }
                     else if (dialogResult == DialogResult.No)
@@ -6388,7 +7172,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
 
                         }
                         //myThread.Abort();
-                        checa_host();
+                       // checa_host();
                         //  MessageBox.Show("button15_Click");
                         // atualiza_compartilhamento();
                     }
@@ -7034,7 +7818,10 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
         }
         private void richTextBox4_TextChanged(object sender, EventArgs e)
         {
-            if (richTextBox4.Text.Length >= 5)
+           
+
+
+                    if (richTextBox4.Text.Length >= 5)
             {
                 button15.Visible = true;
 
@@ -7663,14 +8450,15 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
             {
                 timer10.Enabled = false;
                 timer12.Enabled = false;
-                ProcessStartInfo startInfo = new ProcessStartInfo("cmd", "/K netsh interface set interface \"Ethernet\" DISABLED");
+                /*
+               // ProcessStartInfo startInfo = new ProcessStartInfo("cmd", "/K netsh interface set interface \"Ethernet\" DISABLED");
                 startInfo.RedirectStandardOutput = true;
                 startInfo.UseShellExecute = false;
                 // Do not create the black window.
                 startInfo.CreateNoWindow = true;
                 startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                Process.Start(startInfo);
-
+               // Process.Start(startInfo);
+                */
                 check_id_onboard();
                 if (id_onboard == false)
                 {
@@ -7919,13 +8707,17 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                     worksheet.Cells[1, i] = dataGridView1.Columns[i - 1].HeaderText;
                 }
                 // storing Each row and column value to excel sheet  
-                for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
+                for (int i = 0; i < dataGridView1.Rows.Count; i++)
                 {
                     for (int j = 0; j < dataGridView1.Columns.Count; j++)
                     {
-                        worksheet.Cells[i + 2, j + 1] = dataGridView1.Rows[i].Cells[j].Value.ToString();
+                        if (dataGridView1.Rows[i].Cells[j].Value != null)
+                        {
+                            worksheet.Cells[i + 2, j + 1] = dataGridView1.Rows[i].Cells[j].Value.ToString();
+                        }
                     }
                 }
+
 
 
 
@@ -8083,7 +8875,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                 //   MessageBox.Show("Registro apagado com sucesso", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 //  MessageBox.Show(authorName, "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 // myThread.Abort();
-                checa_host();
+               // checa_host();
                 //   MessageBox.Show("listBox1_MouseDoubleClick");
                 //atualiza_compartilhamento();
 
@@ -8498,10 +9290,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
             }
         }
 
-        private void dataGridView1_SortStringChanged(object sender, Zuby.ADGV.AdvancedDataGridView.SortEventArgs e)
-        {
-            bindingSource1.Sort = dataGridView1.SortString;
-        }
+       
 
         private void button8_Click(object sender, EventArgs e)
         {
@@ -8587,7 +9376,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
         public void scan2(string start, string end)
         {
             comp = 0;
-            //   timer9.Enabled = false;
+        //     timer9.Enabled = false;
             if (soma == 0)
             {
            
@@ -8616,7 +9405,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                     //Loops through the IP range, maxing out at 255
                     for (int i = startIP[2]; i <= endIP[2]; i++)
                     { //3rd octet loop
-                        for (int y = startIP[3]; y <= 255; y++)
+                        for (int y = startIP[3]; y <= 100; y++)
                         { //4th octet loop
                             string ipAddress = startIP[0] + "." + startIP[1] + "." + i + "." + y; //Convert IP array back into a string
                             string endIPAddress = endIP[0] + "." + endIP[1] + "." + endIP[2] + "." + (endIP[3] + 1); // +1 is so that the scanning stops at the correct range
@@ -8711,8 +9500,15 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                                             rede1 = "\\\\" + input.Trim() + "\\compartilhamento\\";
                                             rede10= input.Trim();
                                             //  panel12.BackColor = Color.Black;
-                                            //   MessageBox.Show(input);
-                                            atualiza_compartilhamento();
+                                                // MessageBox.Show(rede1.Trim());
+                                            try
+                                            {
+                                                atualiza_compartilhamento();
+                                            }
+                                            catch
+                                            {
+
+                                            }
 
                                             // timer11.Start();
                                             str = "";
@@ -9075,6 +9871,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
         }
         private void button39_Click(object sender, EventArgs e)
         {
+            /*
             ProcessStartInfo startInfo = new ProcessStartInfo("cmd", "/K netsh interface set interface \"Ethernet\" DISABLED");
             startInfo.RedirectStandardOutput = true;
             startInfo.UseShellExecute = false;
@@ -9082,6 +9879,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
             startInfo.CreateNoWindow = true;
             startInfo.WindowStyle = ProcessWindowStyle.Hidden;
             Process.Start(startInfo);
+            */
             //https://zetcode.com/csharp/excel/ dicas excel
             label43.Text = "AGUARDE, FAZENDO UPDATE DA PLANILHA!";
             update();
@@ -9111,6 +9909,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
         }
         private void button38_Click(object sender, EventArgs e)
         {
+            /*
             ProcessStartInfo startInfo = new ProcessStartInfo("cmd", "/K netsh interface set interface \"Ethernet\" DISABLED");
             startInfo.RedirectStandardOutput = true;
             startInfo.UseShellExecute = false;
@@ -9118,15 +9917,19 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
             startInfo.CreateNoWindow = true;
             startInfo.WindowStyle = ProcessWindowStyle.Hidden;
             Process.Start(startInfo);
+           */
             var drives = DriveInfo.GetDrives().Where(drive => drive.IsReady && drive.DriveType == DriveType.Removable);
             if (drives.FirstOrDefault() != null)
             {
-                label43.Text = "AGUARDE, CRIANDO BACKUP!";
+                label43.Text = "BACKUP CRIADO COM SUCESSO!";
 
                 lblname.Text = drives.FirstOrDefault().Name.ToString();
                 string fileName = "novo.xlsx";
                 string sourcePath = @"C:\compartilhamento\data_base";
                 string targetPath = drives.FirstOrDefault().Name.ToString() + "\\CRIPTOQRCODE_AllBackup\\";
+
+                var dbExporter = new DatabaseExporter();
+                dbExporter.ExportDataToExcel(@"C:\compartilhamento\dados\banco.db", targetPath + "backup.xlsx");
 
                 string destFile = System.IO.Path.Combine(targetPath, fileName) ;
                 System.IO.Directory.CreateDirectory(targetPath);
@@ -9138,14 +9941,14 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
 
                 //Se o diretório não existir...
 
-                if (!Directory.Exists(targetPath))
+              /*  if (!Directory.Exists(targetPath))
                 {
 
                     //Criamos um com o nome folder
                     Directory.CreateDirectory(targetPath);
 
                 }
-
+              
 
 
                 if (System.IO.Directory.Exists(sourcePath))
@@ -9194,7 +9997,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                         textBox7.Focus();
                         textBox7.Text = "";
                     }
-                }
+                }*/
             }
             else
             {
@@ -9205,7 +10008,6 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                     textBox7.Text = "";
                 }
             }
-
 
         }
 
@@ -9356,7 +10158,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
             Boolean rec2 = false;
             // string myIP = Dns.GetHostByName("QRCODE-50").AddressList[1].ToString();
             //label64.Text = myIP;
-            textBox22.Text = " ";
+          //  textBox22.Text = " ";
             nome3 = "";
 
             try
@@ -9375,7 +10177,7 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
                         {
                             string nome = rede1.Split('\\')[2].Trim();
                             string nome2 = nome.Remove(nome.Length - 6);
-                            textBox22.Text = nome + " Online";
+                          //  textBox22.Text = nome + " Online";
                             //myString.Remove(myString.Length-3)
                             //  panel12.BackColor = Color.YellowGreen;
 
@@ -10372,9 +11174,16 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
         }
 
         private void button49_Click_1(object sender, EventArgs e)
+
         {
+            if (richTextBox18.Text != "")
+            {
+                imprime_novo();
+                button1.PerformClick();
+                richTextBox18.Text = "";
+            }
             //create_qrcode_invited_new(); ;// cadastrar_invited()
-            cadastrar_invited();
+            //  cadastrar_invited();
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -10386,5 +11195,789 @@ xlWorkSheet.Cells[1, 24] = "USUARIO";
         {
 
         }
+
+        private void InsertQueue<T>(T data, string collectionName)
+        {
+            using (var db = new LiteDatabase(@"C:\compartilhamento\dados\banco.db"))
+            {
+                var collection = db.GetCollection<T>(collectionName);
+                collection.Insert(data);
+            }
+        }
+
+
+        private List<Usuario> GetAll()
+        {
+            var list = new List<Usuario>();
+            using (var db = new LiteDatabase(@"C:\compartilhamento\dados\banco.db"))
+            {
+                var col = db.GetCollection<Usuario>("usuario");
+                foreach (Usuario _id in col.FindAll())
+                {
+                    list.Add(_id);
+                }
+            }
+            return list;
+        }
+
+        public void DisplayPresetData()
+        {
+            dataGridView1.Size = new System.Drawing.Size(1693, 800);
+            dataGridView1.DataSource = GetAll();
+            this.dataGridView1.DefaultCellStyle.ForeColor = Color.White;
+            this.dataGridView1.DefaultCellStyle.BackColor = Color.FromArgb(51, 51, 76);
+
+            // Allow user to order columns
+            dataGridView1.AllowUserToOrderColumns = true;
+
+            // Enable sorting on all columns
+            foreach (DataGridViewColumn column in dataGridView1.Columns)
+            {
+                column.SortMode = DataGridViewColumnSortMode.Automatic;
+            }
+
+            dataGridView1.Visible = true;
+        }
+
+        private void change()
+        {
+            //string connectionString = "banco.db"; // Update with your database file path
+
+            using (var db = new LiteDatabase(@"C:\compartilhamento\dados\banco.db"))
+            {
+                var usuariocollection = db.GetCollection<Usuario>("usuario"); // Update with your collection name
+                var usuario = usuariocollection.FindOne(x => x.Number.ToString().Contains("33"));
+                usuario.Name = "fabio";
+                usuario.Company = "teste";
+                usuariocollection.Update(usuario);
+            }
+
+        }
+        //1- ler o QR e extrai os dados do usuario
+        //2 - Parse dos campo e atribui a um novo User()
+        //3 - Envia esse novo User() populado ao add_data()
+        private void add_data()
+        {
+            NUM = NUM + 1;
+            Usuario usuario = new Usuario(NUM, "ALEX", "Googlemarine", " 4", 111098414, " 5", " 6", " 7", " 8", " 9 ", "10", " 11", "12 ", "13", "14 ", "15 ", " 16", " 17", " 18 ", "19 ", "20 ", " 21 ", "22 ", "23");
+            InsertQueue(usuario, "usuario");
+        }
+
+        private void add_data2(Usuario usuario)
+        {
+            InsertQueue(usuario, "usuario");
+        }
+
+        private void get_last()
+        {
+            string connectionString = @"C:\compartilhamento\dados\banco.db"; // Updated database file path
+
+            using (var db = new LiteDatabase(connectionString))
+            {
+                var collection = db.GetCollection<Usuario>("usuario");
+
+                var lastData = collection.Query()
+                    .OrderByDescending(x => x.Number)
+                    .FirstOrDefault();
+
+                if (lastData != null)
+                {
+                    textBox1.Text = $"Numero: {lastData.Number},Nome: {lastData.Name}, Empresa: {lastData.Company},Identidade: {lastData.Id_number}";
+                    NUM = lastData.Number;
+                }
+            }
+        }
+
+        private void AddOrUpdateCadastroData(Cadastro cadastro)
+        {
+            InsertQueue(cadastro, "cadastro");
+        }
+
+        private void UpdateDataGridView()
+        {
+            
+            Console.WriteLine("UpdateDataGridView triggered.");
+
+            var allData = GetAll();  // Step 1: Get all data
+            Console.WriteLine($"Initial Count: {allData.Count}");
+
+            string filterString = dataGridView1.FilterString;
+            string sortString = dataGridView1.SortString;
+            Console.WriteLine(filterString);
+            Console.WriteLine("Filter String: " + filterString);
+            Console.WriteLine("Sort String: " + sortString);
+
+            // Handling filtering based on the specific format from DataGridView
+            if (!string.IsNullOrEmpty(filterString))
+            {
+                // Filter by Number
+                var numberMatch = System.Text.RegularExpressions.Regex.Match(filterString, @"\[Number\] IN \((.*?)\)");
+                if (numberMatch.Success)
+                {
+                    var numbers = numberMatch.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.None).Select(n => int.Parse(n)).ToList();
+                    Console.WriteLine("Parsed Numbers for Filtering: " + string.Join(", ", numbers));
+                    allData = allData.Where(u => numbers.Contains(u.Number)).ToList();
+                }
+
+                // Filter by Name
+                var nameMatch = System.Text.RegularExpressions.Regex.Match(filterString, @"\[Name\] IN \((.*?)\)");
+                if (nameMatch.Success)
+                {
+                    var names = nameMatch.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.None).Select(n => n.Trim('\'')).ToList();
+                    Console.WriteLine("Parsed Names for Filtering: " + string.Join(", ", names));
+                    allData = allData.Where(u => names.Contains(u.Name)).ToList();
+                }
+
+                // Filter by Company
+                var companyMatch = System.Text.RegularExpressions.Regex.Match(filterString, @"\[Company\] IN \((.*?)\)");
+                if (companyMatch.Success)
+                {
+                    var companies = companyMatch.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.None).Select(n => n.Trim('\'')).ToList();
+                    Console.WriteLine("Parsed Companies for Filtering: " + string.Join(", ", companies));
+                    allData = allData.Where(u => companies.Contains(u.Company)).ToList();
+                }
+
+                // Filter by Function
+                var functionMatch = System.Text.RegularExpressions.Regex.Match(filterString, @"\[Function\] IN \((.*?)\)");
+                if (functionMatch.Success)
+                {
+                    var functions = functionMatch.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.None).Select(n => n.Trim('\'')).ToList();
+                    Console.WriteLine("Parsed Functions for Filtering: " + string.Join(", ", functions));
+                    allData = allData.Where(u => functions.Contains(u.Function)).ToList();
+                }
+                
+                //Filter by Vessel
+                var vesselMatch = System.Text.RegularExpressions.Regex.Match(filterString, @"\[Vessel\] IN \((.*?)\)");
+                if (vesselMatch.Success)
+                {
+                    var vessels = vesselMatch.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.None).Select(n => n.Trim('\'')).ToList();
+                    Console.WriteLine("Parsed Vessels for Filtering: " + string.Join(", ", vessels));
+                    allData = allData.Where(u => vessels.Contains(u.Vessel)).ToList();
+                }
+
+                //Filter by Local
+                var localMatch = System.Text.RegularExpressions.Regex.Match(filterString, @"\[Local\] IN \((.*?)\)");
+                if (localMatch.Success)
+                {
+                    var local = localMatch.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.None).Select(n => n.Trim('\'')).ToList();
+                    Console.WriteLine("Parsed Local for Filtering: " + string.Join(", ", local));
+                    allData = allData.Where(u => local.Contains(u.Local)).ToList();
+                }
+
+                //Filter by Checked_in_val
+                var checkedInValMatch = System.Text.RegularExpressions.Regex.Match(filterString, @"\[Checked_in_val\] IN \((.*?)\)");
+                if (checkedInValMatch.Success)
+                {
+                    var checkedInVal = checkedInValMatch.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.None).Select(n => n.Trim('\'')).ToList();
+                    Console.WriteLine("Parsed Local for Filtering: " + string.Join(", ", checkedInValMatch));
+                    allData = allData.Where(u => checkedInVal.Contains(u.Checked_in_val)).ToList();
+                }
+
+                //Filter by Check_out_val
+                var checkOutValMatch = System.Text.RegularExpressions.Regex.Match(filterString, @"\[Check_out_val\] IN \((.*?)\)");
+                if (checkOutValMatch.Success)
+                {
+                    var checkOutVal = checkOutValMatch.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.None).Select(n => n.Trim('\'')).ToList();
+                    Console.WriteLine("Parsed Local for Filtering: " + string.Join(", ", checkOutValMatch));
+                    allData = allData.Where(u => checkOutVal.Contains(u.Check_out_val)).ToList();
+                }
+
+                //Filter by Check_in_data
+                var checkInDataMatch = System.Text.RegularExpressions.Regex.Match(filterString, @"\[Check_in_data\] IN \((.*?)\)");
+                if (checkInDataMatch.Success)
+                {
+                    var checkInData = checkInDataMatch.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.None).Select(n => n.Trim('\'')).ToList();
+                    Console.WriteLine("Parsed Local for Filtering: " + string.Join(", ", checkInDataMatch));
+                    allData = allData.Where(u => checkInData.Contains(u.Check_in_data)).ToList();
+                }
+
+                //Filter by Check_in_hora
+                var checkInHoraMatch = System.Text.RegularExpressions.Regex.Match(filterString, @"\[Check_in_hora\] IN \((.*?)\)");
+                if (checkInHoraMatch.Success)
+                {
+                    var checkInHora = checkInHoraMatch.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.None).Select(n => n.Trim('\'')).ToList();
+                    Console.WriteLine("Parsed Local for Filtering: " + string.Join(", ", checkInHoraMatch));
+                    allData = allData.Where(u => checkInHora.Contains(u.Check_in_hora)).ToList();
+                }
+
+                //Filter by Check_out_data
+                var checkOutDataMatch = System.Text.RegularExpressions.Regex.Match(filterString, @"\[Check_out_data\] IN \((.*?)\)");
+                if (checkOutDataMatch.Success)
+                {
+                    var checkOutData = checkOutDataMatch.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.None).Select(n => n.Trim('\'')).ToList();
+                    Console.WriteLine("Parsed Local for Filtering: " + string.Join(", ", checkOutDataMatch));
+                    allData = allData.Where(u => checkOutData.Contains(u.Check_out_data)).ToList();
+                }
+
+                //Filter by Check_out_hora
+                var checkOutHoraMatch = System.Text.RegularExpressions.Regex.Match(filterString, @"\[Check_out_hora\] IN \((.*?)\)");
+                if (checkOutHoraMatch.Success)
+                {
+                    var checkOutHora = checkOutHoraMatch.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.None).Select(n => n.Trim('\'')).ToList();
+                    Console.WriteLine("Parsed Local for Filtering: " + string.Join(", ", checkOutHoraMatch));
+                    allData = allData.Where(u => checkOutHora.Contains(u.Check_out_hora)).ToList();
+                }
+
+                //Filter by Projec
+                var projecMatch = System.Text.RegularExpressions.Regex.Match(filterString, @"\[Projec\] IN \((.*?)\)");
+                if (projecMatch.Success)
+                {
+                    var projec = projecMatch.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.None).Select(n => n.Trim('\'')).ToList();
+                    Console.WriteLine("Parsed Projec for Filtering: " + string.Join(", ", projec));
+                    allData = allData.Where(u => projec.Contains(u.Projec)).ToList();
+                }
+
+                //Filter by Aso
+                var asoMatch = System.Text.RegularExpressions.Regex.Match(filterString, @"\[Aso\] IN \((.*?)\)");
+                if (asoMatch.Success)
+                {
+                    var aso = asoMatch.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.None).Select(n => n.Trim('\'')).ToList();
+                    Console.WriteLine("Parsed Aso for Filtering: " + string.Join(", ", aso));
+                    allData = allData.Where(u => aso.Contains(u.Aso)).ToList();
+                }
+
+                //Filter by Nr_34
+                var nr34Match = System.Text.RegularExpressions.Regex.Match(filterString, @"\[Nr_34\] IN \((.*?)\)");
+                if (nr34Match.Success)
+                {
+                    var nr34 = nr34Match.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.None).Select(n => n.Trim('\'')).ToList();
+                    Console.WriteLine("Parsed Nr_34 for Filtering: " + string.Join(", ", nr34));
+                    allData = allData.Where(u => nr34.Contains(u.Nr_34)).ToList();
+                }
+
+                //Filter by Nr_10
+                var nr10Match = System.Text.RegularExpressions.Regex.Match(filterString, @"\[Nr_10\] IN \((.*?)\)");
+                if (nr10Match.Success)
+                {
+                    var nr10 = nr10Match.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.None).Select(n => n.Trim('\'')).ToList();
+                    Console.WriteLine("Parsed Nr_10 for Filtering: " + string.Join(", ", nr10));
+                    allData = allData.Where(u => nr10.Contains(u.Nr_10)).ToList();
+                }
+
+                //Filter by Nr_33
+                var nr33Match = System.Text.RegularExpressions.Regex.Match(filterString, @"\[Nr_33\] IN \((.*?)\)");
+                if (nr33Match.Success)
+                {
+                    var nr33 = nr33Match.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.None).Select(n => n.Trim('\'')).ToList();
+                    Console.WriteLine("Parsed Nr_33 for Filtering: " + string.Join(", ", nr33));
+                    allData = allData.Where(u => nr33.Contains(u.Nr_33)).ToList();
+                }
+
+                //Filter by Nr_35
+                var nr35Match = System.Text.RegularExpressions.Regex.Match(filterString, @"\[Nr_35\] IN \((.*?)\)");
+                if (nr35Match.Success)
+                {
+                    var nr35 = nr35Match.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.None).Select(n => n.Trim('\'')).ToList();
+                    Console.WriteLine("Parsed Nr_35 for Filtering: " + string.Join(", ", nr35));
+                    allData = allData.Where(u => nr35.Contains(u.Nr_35)).ToList();
+                }
+
+                //Filter by Motivo
+                var motivoMatch = System.Text.RegularExpressions.Regex.Match(filterString, @"\[Motivo\] IN \((.*?)\)");
+                if (motivoMatch.Success)
+                {
+                    var motivo = motivoMatch.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.None).Select(n => n.Trim('\'')).ToList();
+                    Console.WriteLine("Parsed Motivo for Filtering: " + string.Join(", ", motivo));
+                    allData = allData.Where(u => motivo.Contains(u.Motivo)).ToList();
+                }
+
+                //Filter by Level
+                var levelMatch = System.Text.RegularExpressions.Regex.Match(filterString, @"\[Level\] IN \((.*?)\)");
+                if (levelMatch.Success)
+                {
+                    var level = levelMatch.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.None).Select(n => n.Trim('\'')).ToList();
+                    Console.WriteLine("Parsed Level for Filtering: " + string.Join(", ", level));
+                    allData = allData.Where(u => level.Contains(u.Level)).ToList();
+                }
+
+                //Filter by Estado
+                var estadoMatch = System.Text.RegularExpressions.Regex.Match(filterString, @"\[Estado\] IN \((.*?)\)");
+                if (estadoMatch.Success)
+                {
+                    var estado = estadoMatch.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.None).Select(n => n.Trim('\'')).ToList();
+                    Console.WriteLine("Parsed Estado for Filtering: " + string.Join(", ", estado));
+                    allData = allData.Where(u => estado.Contains(u.Estado)).ToList();
+                }
+
+                //Filter by User
+                var userMatch = System.Text.RegularExpressions.Regex.Match(filterString, @"\[User\] IN \((.*?)\)");
+                if (userMatch.Success)
+                {
+                    var user = userMatch.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.None).Select(n => n.Trim('\'')).ToList();
+                    Console.WriteLine("Parsed User for Filtering: " + string.Join(", ", user));
+                    allData = allData.Where(u => user.Contains(u.User)).ToList();
+                }
+
+                // Filter by Identidade
+                var identidadeMatch = System.Text.RegularExpressions.Regex.Match(filterString, @"\[Id_number\] IN \((.*?)\)");
+                if (identidadeMatch.Success)
+                {
+                    var identidades = identidadeMatch.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.None).Select(n => int.Parse(n)).ToList();
+                    Console.WriteLine("Parsed Identidades for Filtering: " + string.Join(", ", identidades));
+                    allData = allData.Where(u => identidades.Contains(u.Id_number)).ToList();
+                }
+
+
+            }
+
+            // Sorting logic
+            if (!string.IsNullOrEmpty(sortString))
+            {
+                if (sortString.Contains("[Number]"))
+                {
+                    allData = sortString.Contains("DESC") ?
+                              allData.OrderByDescending(u => u.Number).ToList() :
+                              allData.OrderBy(u => u.Number).ToList();
+                }
+                else if (sortString.Contains("[Name]"))
+                {
+                    allData = sortString.Contains("DESC") ?
+                              allData.OrderByDescending(u => u.Name).ToList() :
+                              allData.OrderBy(u => u.Name).ToList();
+                }
+                else if (sortString.Contains("[Company]"))
+                {
+                    allData = sortString.Contains("DESC") ?
+                              allData.OrderByDescending(u => u.Company).ToList() :
+                              allData.OrderBy(u => u.Company).ToList();
+                }
+                else if (sortString.Contains("[Vessel]"))
+                {
+                    allData = sortString.Contains("DESC") ?
+                              allData.OrderByDescending(u => u.Vessel).ToList() :
+                              allData.OrderBy(u => u.Vessel).ToList();
+                }
+                else if (sortString.Contains("[Function]"))
+                {
+                    allData = sortString.Contains("DESC") ?
+                              allData.OrderByDescending(u => u.Function).ToList() :
+                              allData.OrderBy(u => u.Function).ToList();
+                }
+                else if (sortString.Contains("[Level]"))
+                {
+                    allData = sortString.Contains("DESC") ?
+                              allData.OrderByDescending(u => u.Level).ToList() :
+                              allData.OrderBy(u => u.Level).ToList();
+                }
+                else if (sortString.Contains("[Id_number]"))
+                {
+                    allData = sortString.Contains("DESC") ?
+                              allData.OrderByDescending(u => u.Id_number).ToList() :
+                              allData.OrderBy(u => u.Id_number).ToList();
+                }
+                else if (sortString.Contains("[Email]"))
+                {
+                    allData = sortString.Contains("DESC") ?
+                              allData.OrderByDescending(u => u.Email).ToList() :
+                              allData.OrderBy(u => u.Email).ToList();
+                }
+                else if (sortString.Contains("[Checked_in_val]"))
+                {
+                    allData = sortString.Contains("DESC") ?
+                              allData.OrderByDescending(u => u.Checked_in_val).ToList() :
+                              allData.OrderBy(u => u.Checked_in_val).ToList();
+                }
+                else if (sortString.Contains("[Check_out_val]"))
+                {
+                    allData = sortString.Contains("DESC") ?
+                              allData.OrderByDescending(u => u.Check_out_val).ToList() :
+                              allData.OrderBy(u => u.Check_out_val).ToList();
+                }
+                else if (sortString.Contains("[Check_in_data]"))
+                {
+                    allData = sortString.Contains("DESC") ?
+                              allData.OrderByDescending(u => u.Check_in_data).ToList() :
+                              allData.OrderBy(u => u.Check_in_data).ToList();
+                }
+                else if (sortString.Contains("[Check_in_hora]"))
+                {
+                    allData = sortString.Contains("DESC") ?
+                              allData.OrderByDescending(u => u.Check_in_hora).ToList() :
+                              allData.OrderBy(u => u.Check_in_hora).ToList();
+                }
+                else if (sortString.Contains("[Check_out_data]"))
+                {
+                    allData = sortString.Contains("DESC") ?
+                              allData.OrderByDescending(u => u.Check_out_data).ToList() :
+                              allData.OrderBy(u => u.Check_out_data).ToList();
+                }
+                else if (sortString.Contains("[Check_out_hora]"))
+                {
+                    allData = sortString.Contains("DESC") ?
+                              allData.OrderByDescending(u => u.Check_out_hora).ToList() :
+                              allData.OrderBy(u => u.Check_out_hora).ToList();
+                }
+                else if (sortString.Contains("[Projec]"))
+                {
+                    allData = sortString.Contains("DESC") ?
+                              allData.OrderByDescending(u => u.Projec).ToList() :
+                              allData.OrderBy(u => u.Projec).ToList();
+                }
+                else if (sortString.Contains("[Aso]"))
+                {
+                    allData = sortString.Contains("DESC") ?
+                              allData.OrderByDescending(u => u.Aso).ToList() :
+                              allData.OrderBy(u => u.Aso).ToList();
+                }
+                else if (sortString.Contains("[Nr_34]"))
+                {
+                    allData = sortString.Contains("DESC") ?
+                              allData.OrderByDescending(u => u.Nr_34).ToList() :
+                              allData.OrderBy(u => u.Nr_34).ToList();
+                }
+                else if (sortString.Contains("[Nr_10]"))
+                {
+                    allData = sortString.Contains("DESC") ?
+                              allData.OrderByDescending(u => u.Nr_10).ToList() :
+                              allData.OrderBy(u => u.Nr_10).ToList();
+                }
+                else if (sortString.Contains("[Nr_33]"))
+                {
+                    allData = sortString.Contains("DESC") ?
+                              allData.OrderByDescending(u => u.Nr_33).ToList() :
+                              allData.OrderBy(u => u.Nr_33).ToList();
+                }
+                else if (sortString.Contains("[Nr_35]"))
+                {
+                    allData = sortString.Contains("DESC") ?
+                              allData.OrderByDescending(u => u.Nr_35).ToList() :
+                              allData.OrderBy(u => u.Nr_35).ToList();
+                }
+                else if (sortString.Contains("[Estado]"))
+                {
+                    allData = sortString.Contains("DESC") ?
+                              allData.OrderByDescending(u => u.Estado).ToList() :
+                              allData.OrderBy(u => u.Estado).ToList();
+                }
+                else if (sortString.Contains("[Motivo]"))
+                {
+                    allData = sortString.Contains("DESC") ?
+                              allData.OrderByDescending(u => u.Motivo).ToList() :
+                              allData.OrderBy(u => u.Motivo).ToList();
+                }
+                else if (sortString.Contains("[User]"))
+                {
+                    allData = sortString.Contains("DESC") ?
+                              allData.OrderByDescending(u => u.User).ToList() :
+                              allData.OrderBy(u => u.User).ToList();
+                }
+            }
+
+            Console.WriteLine($"Filtered and Sorted Object Count: {allData.Count}");
+
+            // Update the DataGridView
+            dataGridView1.DataSource = allData;
+
+            
+            Console.WriteLine(filterString);
+        }
+
+
+
+        private void dataGridView1_SortStringChanged(object sender, Zuby.ADGV.AdvancedDataGridView.SortEventArgs e)
+        {
+            UpdateDataGridView();
+        }
+
+        private void dataGridView1_FilterStringChanged(object sender, Zuby.ADGV.AdvancedDataGridView.FilterEventArgs e)
+        {
+             UpdateDataGridView();
+        }
+      
+
+
+
+        private void Create_DB()
+        {
+            //make dir C:\compartilhamento\dados if not exist
+            if (!Directory.Exists(@"C:\compartilhamento\dados"))
+            {
+                Directory.CreateDirectory(@"C:\compartilhamento\dados");
+            }
+
+
+            LiteDatabase db = new LiteDatabase(@"C:\compartilhamento\dados\banco.db");
+            //create Usuario collection
+            var usuarioCollection = db.GetCollection<Usuario>("usuario");
+            var cadastroCollection = db.GetCollection<Cadastro>("cadastro");
+            //popuplate Usuario collection
+         //usuarioCollection.Insert(new Usuario(1, "ALEX", "Googlemarine", " 4", 111098414, " 5", " 6", " 7", " 8", " 9 ", "10", " 11", "12 ", "13", "14 ", "15 ", " 16", " 17", " 18 ", "19 ", "20 ", " 21 ", "22 ", "23"));  
+            hasDb = true;
+            db.Dispose();
+        }
+
+   
+
+        private async void button50_Click_1(object sender, EventArgs e)
+        {
+            //synch_db(rede1.Trim());
+            /*
+           QRCodeEncryptor = new QRCodeEncryptor();
+            string originalText = "Texto que será criptografado e depois descriptografado.";
+
+            // Criptografa o texto
+            string encryptedText = QRCodeEncryptor.EncryptQRCode(originalText);
+            Console.WriteLine("Texto criptografado: " + encryptedText);
+
+            // Descriptografa o texto
+            string decryptedText = QRCodeEncryptor.DecryptQRCode(encryptedText);
+            Console.WriteLine("Texto descriptografado: " + decryptedText);
+            */
+
+
+            // Supondo que o endereço IP da rede local é 192.168.0.*
+            // Supondo que o endereço IP da rede local é 192.168.0.*
+            string baseIP = "190.168.0.";
+
+            // Executar as tarefas em paralelo para acelerar o processo.
+            var tasks = new Task[255];
+
+            for (int i = 1; i <= 254; i++)
+            {
+                string ip = baseIP + i.ToString();
+                tasks[i - 1] = PingAsync(ip);
+            }
+
+            await Task.WhenAll(tasks);
+        }
+        private async Task PingAsync(string ip)
+        {
+            Ping ping = new Ping();
+            PingReply reply = await ping.SendPingAsync(ip, 1000); // Timeout de 1000 ms
+            if (reply.Status == IPStatus.Success)
+            {
+                // Aqui você pode adicionar o IP a uma lista, ou fazer algo com ele.
+                Console.WriteLine($"Máquina ativa encontrada em: {ip}");
+            }
+        }
+        private void richTextBox12_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lbustter_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lv1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label18_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void richTextBox18_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            button28.PerformClick();
+            if (richTextBox18.Text != "")
+            {
+                richTextBox16.Text = richTextBox18.Text;
+                richTextBox6.Text = "";
+                richTextBox7.Text = "";
+                richTextBox15.Text = "";
+                label37.Text = "";
+                local1.Checked = false;
+                local2.Checked = false;
+                local3.Checked = false;
+                dateTimePicker1.Visible = false;
+                dateTimePicker2.Visible = false;
+                check_if_exist_number2();
+                
+            }
+        }
+
+        private void richTextBox18_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void timer13_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                textBox22.Text = "";
+                textBox22.Text = rede + " On-Line";
+            }
+            catch
+            {
+
+            }
+        }
+
+        private void label27_Click(object sender, EventArgs e)
+        {
+
+        }
+    }
+}
+
+public class DatabaseExporter
+{
+    public void ExportDataToExcel(string dbPath, string excelFilePath)
+    {
+        using (var db = new LiteDatabase(dbPath))
+        {
+            var usuarioCollection = db.GetCollection<Usuario>("usuario");
+            var allUsuarios = usuarioCollection.FindAll().ToList();
+
+            using (var workbook = new XLWorkbook())
+  
+            {
+                var worksheet = workbook.Worksheets.Add("Usuarios");
+                worksheet.Cell(1, 1).Value = "Number";
+                worksheet.Cell(1, 2).Value = "Name";
+                worksheet.Cell(1, 3).Value = "Company";
+                worksheet.Cell(1, 4).Value = "Function";
+                worksheet.Cell(1, 5).Value = "Id_number";
+                worksheet.Cell(1, 6).Value = "Email";
+                worksheet.Cell(1, 7).Value = "Vessel";
+                worksheet.Cell(1, 8).Value = "Checked_in_val";
+                worksheet.Cell(1, 9).Value = "Check_out_val";
+                worksheet.Cell(1, 10).Value = "Check_in_data";
+                worksheet.Cell(1, 11).Value = "Check_in_hora";
+                worksheet.Cell(1, 12).Value = "Check_out_data";
+                worksheet.Cell(1, 13).Value = "Check_out_hora";
+                worksheet.Cell(1, 14).Value = "Projec";
+                worksheet.Cell(1, 15).Value = "Aso";
+                worksheet.Cell(1, 16).Value = "Nr_34";
+                worksheet.Cell(1, 17).Value = "Nr_10";
+                worksheet.Cell(1, 18).Value = "Nr_33";
+                worksheet.Cell(1, 19).Value = "Nr_35";
+                worksheet.Cell(1, 20).Value = "Local";
+                worksheet.Cell(1, 21).Value = "Level";
+                worksheet.Cell(1, 22).Value = "Estado";
+                worksheet.Cell(1, 23).Value = "Motivo";
+                worksheet.Cell(1, 24).Value = "User";
+                
+
+                for (int i = 0; i < allUsuarios.Count; i++)
+                {
+                    var usuario = allUsuarios[i];
+                    worksheet.Cell(i + 2, 1).Value = usuario.Number;
+                    worksheet.Cell(i + 2, 2).Value = usuario.Name;
+                    worksheet.Cell(i + 2, 3).Value = usuario.Company;
+                    worksheet.Cell(i + 2, 4).Value = usuario.Function;
+                    worksheet.Cell(i + 2, 5).Value = usuario.Id_number;
+                    worksheet.Cell(i + 2, 6).Value = usuario.Email;
+                    worksheet.Cell(i + 2, 7).Value = usuario.Vessel;
+                    worksheet.Cell(i + 2, 8).Value = usuario.Checked_in_val;
+                    worksheet.Cell(i + 2, 9).Value = usuario.Check_out_val;
+                    worksheet.Cell(i + 2, 10).Value = usuario.Check_in_data;
+                    worksheet.Cell(i + 2, 11).Value = usuario.Check_in_hora;
+                    worksheet.Cell(i + 2, 12).Value = usuario.Check_out_data;
+                    worksheet.Cell(i + 2, 13).Value = usuario.Check_out_hora;
+                    worksheet.Cell(i + 2, 14).Value = usuario.Projec;
+                    worksheet.Cell(i + 2, 15).Value = usuario.Aso;
+                    worksheet.Cell(i + 2, 16).Value = usuario.Nr_34;
+                    worksheet.Cell(i + 2, 17).Value = usuario.Nr_10;
+                    worksheet.Cell(i + 2, 18).Value = usuario.Nr_33;
+                    worksheet.Cell(i + 2, 19).Value = usuario.Nr_35;
+                    worksheet.Cell(i + 2, 20).Value = usuario.Local;
+                    worksheet.Cell(i + 2, 21).Value = usuario.Level;
+                    worksheet.Cell(i + 2, 22).Value = usuario.Estado;
+                    worksheet.Cell(i + 2, 23).Value = usuario.Motivo;
+                    worksheet.Cell(i + 2, 24).Value = usuario.User;
+                }
+
+                workbook.SaveAs(excelFilePath);
+            }
+        }
+    }
+}
+
+public class NetworkConnection : IDisposable
+{
+    string _networkName;
+
+    public NetworkConnection(string networkName, NetworkCredential credentials)
+    {
+        _networkName = networkName;
+
+        var netResource = new NetResource()
+        {
+            Scope = ResourceScope.GlobalNetwork,
+            ResourceType = ResourceType.Disk,
+            DisplayType = ResourceDisplaytype.Share,
+            RemoteName = networkName
+        };
+
+        var result = WNetAddConnection2(netResource, credentials.Password, credentials.UserName, 0);
+
+        if (result != 0)
+        {
+         
+        }
+    }
+
+    ~NetworkConnection()
+    {
+        Dispose(false);
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        WNetCancelConnection2(_networkName, 0, true);
+    }
+
+    [DllImport("mpr.dll")]
+    private static extern int WNetAddConnection2(NetResource netResource, string password, string username, int flags);
+
+    [DllImport("mpr.dll")]
+    private static extern int WNetCancelConnection2(string name, int flags, bool force);
+
+    [StructLayout(LayoutKind.Sequential)]
+    public class NetResource
+    {
+        public ResourceScope Scope;
+        public ResourceType ResourceType;
+        public ResourceDisplaytype DisplayType;
+        public int Usage;
+        public string LocalName;
+        public string RemoteName;
+        public string Comment;
+        public string Provider;
+    }
+
+    public enum ResourceScope : int
+    {
+        Connected = 1,
+        GlobalNetwork,
+        Remembered,
+        Recent,
+        Context
+    };
+
+    public enum ResourceType : int
+    {
+        Any = 0,
+        Disk = 1,
+        Print = 2,
+        Reserved = 8,
+    }
+
+    public enum ResourceDisplaytype : int
+    {
+        Generic = 0x0,
+        Domain = 0x01,
+        Server = 0x02,
+        Share = 0x03,
+        File = 0x04,
+        Group = 0x05,
+        Network = 0x06,
+        Root = 0x07,
+        Shareadmin = 0x08,
+        Directory = 0x09,
+        Tree = 0x0a,
+        Ndscontainer = 0x0b
     }
 }
