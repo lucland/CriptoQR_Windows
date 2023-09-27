@@ -886,6 +886,10 @@ namespace criptoqrcode
 
 
                         int count = File.ReadAllLines(@"C:\compartilhamento\data_txt\data2.txt").Length;
+                        
+
+  
+
                         string number = count.ToString().Trim();
 
                         // string number = System.IO.File.ReadAllText(@"C:\compartilhamento\data_txt\count.txt");
